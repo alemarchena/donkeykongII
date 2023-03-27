@@ -26,8 +26,45 @@ public class Movement : MonoBehaviour
     }
     public float _stepY { get; }
     public float _stepX { get; }
-    
-   
+
+
+    public void MovementNoControlled(Transform t, TipoMovimiento tm)
+    {
+        try
+        {
+            canMove = false;
+            switch (tm)
+            {
+                case TipoMovimiento.tup:
+                    p = new Vector3(t.position.x, t.position.y + _stepY);
+
+                    break;
+                case TipoMovimiento.tdown:
+                    p = new Vector3(t.position.x, t.position.y - _stepY);
+
+                    break;
+                case TipoMovimiento.tleft:
+                    p = new Vector3(t.position.x - _stepX, t.position.y);
+
+                    break;
+                case TipoMovimiento.tright:
+                    p = new Vector3(t.position.x + _stepX, t.position.y);
+                    break;
+                case TipoMovimiento.tpush:
+                    
+                    p = new Vector3(t.position.x, t.position.y + _stepY);
+                    break;
+            }
+           
+            t.position = p;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("No se encontró el mapa de movimientos sin física");
+        }
+    }
+
+
     public void Move(Transform t, TipoMovimiento tm)
     {
         try

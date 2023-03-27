@@ -15,15 +15,22 @@ public class MovementAutomatic : MonoBehaviour
     [Header("Horizontal Parameters")]
     [SerializeField] float _limitRightX;
     [SerializeField] float _limitLeftX;
-    [SerializeField] private bool movingToRight;
-    [SerializeField] private bool LookAtRight;
+    private bool movingToRight;
+    private bool LookAtRight;
+
+    [Header("Vertical Parameters")]
+    [SerializeField] float _limitAboveY;
+    float _limitBelowY;
+    private bool movingUp;
 
     private SpriteRenderer sprite;
     private Transform t;
     
+
     private void Awake()
     {
-        t = GetComponent<Transform>();
+        //t = GetComponent<Transform>();
+        t = transform;
         sprite = GetComponent<SpriteRenderer>();
     }
     private void Update()
@@ -36,14 +43,19 @@ public class MovementAutomatic : MonoBehaviour
                     HorizontalBounce();
                     break;
                 case TypeMovementBot.VerticalBounce:
+                    VerticalBounce();
                     break;
                 case TypeMovementBot.HorizontalFromLeft:
+                    HorizontalFromLeft();
                     break;
                 case TypeMovementBot.HorizontalFromRight:
+                    HorizontalFromRight();
                     break;
                 case TypeMovementBot.VerticalFromAbove:
+                    VerticalFromAbove();
                     break;
                 case TypeMovementBot.VerticalFromBelow:
+                    VerticalFromBelow();
                     break;
             }
         }catch(Exception e)
@@ -72,12 +84,11 @@ public class MovementAutomatic : MonoBehaviour
                 LookAtRight = true;
                 sprite.flipX = true;
             }
-
         }
 
         if (movingToRight)
         {
-            t.position = new Vector3(t.position.x - _step,t.position.y,t.position.z);
+            t.position = new Vector3(t.position.x - _step, t.position.y, t.position.z);
         }
         else
         {
@@ -87,26 +98,55 @@ public class MovementAutomatic : MonoBehaviour
 
     private void VerticalBounce()
     {
+        if (t.position.y > _limitAboveY)
+        {
+            movingUp= true;
+        }
+        else if (t.position.y < _limitBelowY)
+        {
+            movingUp= false;
+        }
 
+        if (movingUp)
+        {
+            t.position = new Vector3(t.position.x, t.position.y - _step, t.position.z);
+        }
+        else
+        {
+            t.position = new Vector3(t.position.x, t.position.y + _step, t.position.z);
+        }
     }
 
     private void HorizontalFromLeft()
     {
+        if (t.position.x < _limitRightX)
+        {
+            t.position = new Vector3(t.position.x + _step, t.position.y, t.position.z);
+        }
 
     }
 
     private void HorizontalFromRight()
     {
-
+        if (t.position.x > _limitLeftX)
+        {
+            t.position = new Vector3(t.position.x - _step, t.position.y, t.position.z);
+        }
     }
 
     private void VerticalFromAbove()
     {
-
+        if (t.position.y > _limitBelowY)
+        {
+            t.position = new Vector3(t.position.x, t.position.y - _step, t.position.z);
+        }
     }
 
     private void VerticalFromBelow()
     {
-
+        if (t.position.y < _limitAboveY)
+        {
+            t.position = new Vector3(t.position.x, t.position.y + _step, t.position.z);
+        }
     }
 }
