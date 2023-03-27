@@ -20,7 +20,7 @@ public class MovementAutomatic : MonoBehaviour
 
     [Header("Vertical Parameters")]
     [SerializeField] float _limitAboveY;
-    float _limitBelowY;
+    [SerializeField] float _limitBelowY;
     private bool movingUp;
 
     private SpriteRenderer sprite;
