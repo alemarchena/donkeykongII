@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rotating : MonoBehaviour
+public class RotateObject : MonoBehaviour
 {
     [Header("Rotación")]
     [SerializeField] bool rotate;

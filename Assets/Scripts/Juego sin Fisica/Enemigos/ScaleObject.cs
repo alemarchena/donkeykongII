@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Scaling : MonoBehaviour
+public class ScaleObject : MonoBehaviour
 {
     [Header("Escala")]
     [SerializeField] bool scale;

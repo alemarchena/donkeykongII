@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Buttons : MonoBehaviour
+public class Buttons_Movement : MonoBehaviour
 {
     Transform t;
     Movement m;
@@ -10,7 +11,14 @@ public class Buttons : MonoBehaviour
     private void Awake()
     {
         t = GetComponent<Transform>();
-        m = GetComponent<Movement>();
+        try
+        {
+            m = GetComponent<Movement>();
+        }catch(Exception e)
+        {
+            Debug.LogError("Falta el asociar el componente Movement al objeto");
+            return;
+        }
     }
 
     public void Up()

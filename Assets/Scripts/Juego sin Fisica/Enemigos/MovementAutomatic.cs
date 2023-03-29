@@ -3,15 +3,34 @@ using UnityEngine;
 
 public class MovementAutomatic : MonoBehaviour
 {
-    enum TypeMovementBot { HorizontalBounce,VerticalBounce,HorizontalFromLeft, HorizontalFromRight,VerticalFromAbove, VerticalFromBelow }
+    enum TypeMovementRobot { HorizontalBounce,VerticalBounce,HorizontalFromLeft, HorizontalFromRight,VerticalFromAbove, VerticalFromBelow }
 
-    [SerializeField] TypeMovementBot typeMovementRobot;
+    [SerializeField] TypeMovementRobot typeMovementRobot;
     [Space]
 
     [Header("Displacement Quantity")]
     [SerializeField] float _step;
-    [Space]
 
+    [SerializeField] float _velocity;
+
+    public float VelocityMovement
+    {
+        get
+        {
+            return _velocity;
+        }
+        set
+        {
+            if (value > 0 && value <= 1)
+                _velocity = value;
+            else
+                Debug.LogError("El tiempo debe ser un valor entre cero y uno");
+        }
+    }
+
+    public enum InitialPosition { Left,Right}
+
+    [Space]
     [Header("Horizontal Parameters")]
     [SerializeField] float _limitRightX;
     [SerializeField] float _limitLeftX;
@@ -25,43 +44,60 @@ public class MovementAutomatic : MonoBehaviour
 
     private SpriteRenderer sprite;
     private Transform t;
-    
+    private float counterTime;
+    private bool canMove;
 
     private void Awake()
     {
-        //t = GetComponent<Transform>();
-        t = transform;
+        t = GetComponent<Transform>();
         sprite = GetComponent<SpriteRenderer>();
+        ResetTime();
+    }
+    
+    private void ResetTime()
+    {
+        counterTime = 0;
+        canMove = true;
     }
     private void Update()
     {
-        try
+        counterTime += _velocity * Time.deltaTime;
+        if(counterTime > 1)
         {
-            switch (typeMovementRobot)
-            {
-                case TypeMovementBot.HorizontalBounce:
-                    HorizontalBounce();
-                    break;
-                case TypeMovementBot.VerticalBounce:
-                    VerticalBounce();
-                    break;
-                case TypeMovementBot.HorizontalFromLeft:
-                    HorizontalFromLeft();
-                    break;
-                case TypeMovementBot.HorizontalFromRight:
-                    HorizontalFromRight();
-                    break;
-                case TypeMovementBot.VerticalFromAbove:
-                    VerticalFromAbove();
-                    break;
-                case TypeMovementBot.VerticalFromBelow:
-                    VerticalFromBelow();
-                    break;
-            }
-        }catch(Exception e)
-        {
-            Debug.LogError("No se ha encontrado el componente Transform en el objeto actual");
+            ResetTime();
         }
+        if(canMove)
+        {
+            try
+            {
+                switch (typeMovementRobot)
+                {
+                    case TypeMovementRobot.HorizontalBounce:
+                        HorizontalBounce();
+                        break;
+                    case TypeMovementRobot.VerticalBounce:
+                        VerticalBounce();
+                        break;
+                    case TypeMovementRobot.HorizontalFromLeft:
+                        HorizontalFromLeft();
+                        break;
+                    case TypeMovementRobot.HorizontalFromRight:
+                        HorizontalFromRight();
+                        break;
+                    case TypeMovementRobot.VerticalFromAbove:
+                        VerticalFromAbove();
+                        break;
+                    case TypeMovementRobot.VerticalFromBelow:
+                        VerticalFromBelow();
+                        break;
+                }
+            }catch(Exception e)
+            {
+                Debug.LogError("No se ha encontrado el componente Transform en el objeto actual");
+            }
+            canMove = false;
+        }
+
     }
 
     private void HorizontalBounce()
