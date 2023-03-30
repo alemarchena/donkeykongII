@@ -3,16 +3,23 @@ using UnityEngine;
 
 public class MovementAutomaticWithCounter : MonoBehaviour
 {
-    enum TypeMovementBot { HorizontalBounce,VerticalBounce,HorizontalFromLeft, HorizontalFromRight,VerticalFromAbove, VerticalFromBelow }
+    public enum TypeMovementAutomatic { HorizontalBounce, HorizontalFromLeft, HorizontalFromRight }
+    public enum InitialPosition { Left, Right }
 
-    [SerializeField] TypeMovementBot typeMovementRobot;
+    [SerializeField] TypeMovementAutomatic typeMovementRobot;
+    [SerializeField] InitialPosition initialPosition;
     [Space]
 
     [Header("Displacement Quantity")]
     [SerializeField] float _step;
 
+    [Range(0, 10)]
     [SerializeField] float _velocity;
 
+
+    /// <summary>
+    /// Un valor flotante entre cero y diez
+    /// </summary>
     public float VelocityMovement
     {
         get
@@ -21,41 +28,37 @@ public class MovementAutomaticWithCounter : MonoBehaviour
         }
         set
         {
-            if (value > 0 && value <= 1)
+            if (value > 0 && value <= 10)
                 _velocity = value;
             else
                 Debug.LogError("El tiempo debe ser un valor entre cero y uno");
         }
     }
 
-    public enum InitialPosition { Left,Right}
-
     [Space]
     [Header("Horizontal Parameters")]
-    [SerializeField] float _limitCounterRightX;
-    [SerializeField] float _limitCounterLeftX;
-    [SerializeField] InitialPosition initialPosition;
+    [SerializeField] int _limitCounterRightX;
+    [SerializeField] int _limitCounterLeftX;
+    [SerializeField] private bool canTeletransport;
+
 
     private bool movingToRight;
     private bool LookAtRight;
-
-    [Header("Vertical Parameters")]
-    [SerializeField] float _limitCounterAboveY;
-    [SerializeField] float _limitCounterBelowY;
-    private bool movingUp;
-
     private SpriteRenderer sprite;
     private Transform t;
     private float counterTime;
     private bool canMove;
+    private int contadorX;
+    private Vector3 positionStart;
+    
 
-    [SerializeField] private int contadorX;
-    [SerializeField] private int contadorY;
     private void Awake()
     {
-        //t = GetComponent<Transform>();
-        t = transform;
+        t = GetComponent<Transform>();
+        positionStart = t.position;
+
         sprite = GetComponent<SpriteRenderer>();
+
         ResetTime();
         ResetCounter();
     }
@@ -67,13 +70,27 @@ public class MovementAutomaticWithCounter : MonoBehaviour
     }
     private void ResetCounter()
     {
-        if (initialPosition == InitialPosition.Right)
-            contadorX = 7;
-        else
-            contadorX = 0;
-
+        switch (typeMovementRobot)
+        {
+            case TypeMovementAutomatic.HorizontalBounce:
+                if (initialPosition == InitialPosition.Right)
+                    contadorX = _limitCounterRightX;
+                else
+                    contadorX = _limitCounterLeftX;
+                
+                break;
+            case TypeMovementAutomatic.HorizontalFromLeft:
+                contadorX = _limitCounterLeftX;
+                transform.position = positionStart;
+                break;
+            case TypeMovementAutomatic.HorizontalFromRight:
+                contadorX = _limitCounterRightX;
+                transform.position = positionStart;
+                break;
+        }
         Visibilidad();
     }
+    
     private void Update()
     {
         counterTime += _velocity * Time.deltaTime;
@@ -87,23 +104,14 @@ public class MovementAutomaticWithCounter : MonoBehaviour
             {
                 switch (typeMovementRobot)
                 {
-                    case TypeMovementBot.HorizontalBounce:
+                    case TypeMovementAutomatic.HorizontalBounce:
                         HorizontalBounceCounter();
                         break;
-                    case TypeMovementBot.VerticalBounce:
-                        VerticalBounce();
-                        break;
-                    case TypeMovementBot.HorizontalFromLeft:
+                    case TypeMovementAutomatic.HorizontalFromLeft:
                         HorizontalFromLeft();
                         break;
-                    case TypeMovementBot.HorizontalFromRight:
+                    case TypeMovementAutomatic.HorizontalFromRight:
                         HorizontalFromRight();
-                        break;
-                    case TypeMovementBot.VerticalFromAbove:
-                        VerticalFromAbove();
-                        break;
-                    case TypeMovementBot.VerticalFromBelow:
-                        VerticalFromBelow();
                         break;
                 }
             }catch(Exception e)
@@ -112,12 +120,11 @@ public class MovementAutomaticWithCounter : MonoBehaviour
             }
             canMove = false;
         }
-
     }
 
     private void Visibilidad()
     {
-        if (contadorX == 7 || contadorX == 0)
+        if (contadorX == _limitCounterRightX || contadorX == _limitCounterLeftX)
             sprite.enabled = false;
         else
             sprite.enabled = true;
@@ -125,15 +132,15 @@ public class MovementAutomaticWithCounter : MonoBehaviour
     private void HorizontalBounceCounter()
     {
 
-        if (contadorX >= 7)
+        if (contadorX >= _limitCounterRightX)
         {
             MoveToLeft();
-            contadorX = 7;
+            contadorX = _limitCounterRightX;
         }
-        else if (contadorX <= 0)
+        else if (contadorX <= _limitCounterLeftX)
         {
             MoveToRight();
-            contadorX = 0;
+            contadorX = _limitCounterLeftX;
         }
 
 
@@ -171,57 +178,48 @@ public class MovementAutomaticWithCounter : MonoBehaviour
         }
     }
 
-    private void VerticalBounce()
-    {
-        if (t.position.y > _limitCounterAboveY)
-        {
-            movingUp= true;
-        }
-        else if (t.position.y < _limitCounterBelowY)
-        {
-            movingUp= false;
-        }
-
-        if (movingUp)
-        {
-            t.position = new Vector3(t.position.x, t.position.y - _step, t.position.z);
-        }
-        else
-        {
-            t.position = new Vector3(t.position.x, t.position.y + _step, t.position.z);
-        }
-    }
 
     private void HorizontalFromLeft()
     {
-        if (t.position.x < _limitCounterRightX)
+        if (contadorX <= _limitCounterLeftX)
+        {
+            MoveToRight();
+            contadorX = _limitCounterLeftX;
+        }
+
+        if (contadorX < _limitCounterRightX)
         {
             t.position = new Vector3(t.position.x + _step, t.position.y, t.position.z);
+            contadorX += 1;
         }
+        Visibilidad();
+        Teletransport();
 
     }
 
     private void HorizontalFromRight()
     {
-        if (t.position.x > _limitCounterLeftX)
+        if (contadorX >= _limitCounterRightX)
+        {
+            MoveToLeft();
+            contadorX = _limitCounterRightX;
+        }
+
+        if (contadorX > _limitCounterLeftX)
         {
             t.position = new Vector3(t.position.x - _step, t.position.y, t.position.z);
+            contadorX -= 1;
         }
+
+        Visibilidad();
+        Teletransport();
     }
 
-    private void VerticalFromAbove()
+    private void Teletransport()
     {
-        if (t.position.y > _limitCounterBelowY)
+        if (canTeletransport && (contadorX == _limitCounterLeftX || contadorX == _limitCounterRightX))
         {
-            t.position = new Vector3(t.position.x, t.position.y - _step, t.position.z);
-        }
-    }
-
-    private void VerticalFromBelow()
-    {
-        if (t.position.y < _limitCounterAboveY)
-        {
-            t.position = new Vector3(t.position.x, t.position.y + _step, t.position.z);
+            ResetCounter();
         }
     }
 }
