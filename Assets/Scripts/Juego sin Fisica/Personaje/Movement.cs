@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Movement : MonoBehaviour
@@ -11,8 +9,12 @@ public class Movement : MonoBehaviour
 
     private Vector3 p;
     private bool canMove;
-    private int contadorX;
-    private int contadorY;
+    private int counterX;
+    private int counterY;
+
+    [SerializeField] int originaPositionX=1;
+    [SerializeField] int originaPositionY=0;
+
     Movement()
     {
         _stepY = 0.6f;
@@ -31,8 +33,8 @@ public class Movement : MonoBehaviour
 
     private void ResetCounter()
     {
-        contadorX = 1;
-        contadorY = 0;
+        counterX = originaPositionX;
+        counterY = originaPositionY;
     }
     public void MovementNoControlled(Transform t, TipoMovimiento tm)
     {
@@ -81,8 +83,8 @@ public class Movement : MonoBehaviour
                 case TipoMovimiento.tup:
                     if (mMap.CheckMove(TipoMovimiento.tup, new Vector2(mMap.contadorX, mMap.contadorY)))
                     {
-                        contadorY += 1;
-                        mMap.contadorY = contadorY;
+                        counterY += 1;
+                        mMap.contadorY = counterY;
                         if(mMap.cambioPantalla == true)
                         {
                             p = new Vector3(t.position.x, t.position.y + _stepY * 3);
@@ -96,8 +98,8 @@ public class Movement : MonoBehaviour
                 case TipoMovimiento.tdown:
                     if (mMap.CheckMove(TipoMovimiento.tdown, new Vector2(mMap.contadorX, mMap.contadorY)))
                     {
-                        contadorY -= 1;
-                        mMap.contadorY = contadorY;
+                        counterY -= 1;
+                        mMap.contadorY = counterY;
 
                         if (mMap.cambioPantalla == true)
                         {
@@ -116,8 +118,8 @@ public class Movement : MonoBehaviour
                 case TipoMovimiento.tleft:
                     if (mMap.CheckMove(TipoMovimiento.tleft, new Vector2(mMap.contadorX, mMap.contadorY)))
                     {
-                        contadorX -= 1;
-                        mMap.contadorX = contadorX;
+                        counterX -= 1;
+                        mMap.contadorX = counterX;
                         p = new Vector3(t.position.x - _stepX, t.position.y);
 
                         canMove = true;
@@ -127,8 +129,8 @@ public class Movement : MonoBehaviour
                 case TipoMovimiento.tright:
                     if (mMap.CheckMove(TipoMovimiento.tright, new Vector2(mMap.contadorX, mMap.contadorY)))
                     {
-                        contadorX += 1;
-                        mMap.contadorX = contadorX;
+                        counterX += 1;
+                        mMap.contadorX = counterX;
                         p = new Vector3(t.position.x + _stepX, t.position.y);
                         canMove = true;
 
@@ -137,8 +139,8 @@ public class Movement : MonoBehaviour
                 case TipoMovimiento.tpush:
                     if (mMap.CheckMove(TipoMovimiento.tpush, new Vector2(mMap.contadorX, mMap.contadorY)))
                     {
-                        contadorY += 1;
-                        mMap.contadorY = contadorY;
+                        counterY += 1;
+                        mMap.contadorY = counterY;
                         p = new Vector3(t.position.x, t.position.y + _stepY);
                         canMove = true;
 
@@ -163,8 +165,8 @@ public class Movement : MonoBehaviour
     IEnumerator BajarDelSalto(Transform t)
     {
         yield return new WaitForSeconds(0.5f);
-        contadorY -= 1;
-        mMap.contadorY -= contadorY;
+        counterY -= 1;
+        mMap.contadorY -= counterY;
         p = new Vector3(t.position.x, t.position.y - _stepY);
         t.position = p;
     }

@@ -48,7 +48,7 @@ public class MovementAutomaticWithCounter : MonoBehaviour
     private Transform t;
     private float counterTime;
     private bool canMove;
-    private int contadorX;
+    private int counterX;
     private Vector3 positionStart;
     
 
@@ -74,17 +74,17 @@ public class MovementAutomaticWithCounter : MonoBehaviour
         {
             case TypeMovementAutomatic.HorizontalBounce:
                 if (initialPosition == InitialPosition.Right)
-                    contadorX = _limitCounterRightX;
+                    counterX = _limitCounterRightX;
                 else
-                    contadorX = _limitCounterLeftX;
+                    counterX = _limitCounterLeftX;
                 
                 break;
             case TypeMovementAutomatic.HorizontalFromLeft:
-                contadorX = _limitCounterLeftX;
+                counterX = _limitCounterLeftX;
                 transform.position = positionStart;
                 break;
             case TypeMovementAutomatic.HorizontalFromRight:
-                contadorX = _limitCounterRightX;
+                counterX = _limitCounterRightX;
                 transform.position = positionStart;
                 break;
         }
@@ -124,7 +124,7 @@ public class MovementAutomaticWithCounter : MonoBehaviour
 
     private void Visibilidad()
     {
-        if (contadorX == _limitCounterRightX || contadorX == _limitCounterLeftX)
+        if (counterX == _limitCounterRightX || counterX == _limitCounterLeftX)
             sprite.enabled = false;
         else
             sprite.enabled = true;
@@ -132,27 +132,27 @@ public class MovementAutomaticWithCounter : MonoBehaviour
     private void HorizontalBounceCounter()
     {
 
-        if (contadorX >= _limitCounterRightX)
+        if (counterX >= _limitCounterRightX)
         {
             MoveToLeft();
-            contadorX = _limitCounterRightX;
+            counterX = _limitCounterRightX;
         }
-        else if (contadorX <= _limitCounterLeftX)
+        else if (counterX <= _limitCounterLeftX)
         {
             MoveToRight();
-            contadorX = _limitCounterLeftX;
+            counterX = _limitCounterLeftX;
         }
 
 
         if (movingToRight)
         {
             t.position = new Vector3(t.position.x - _step, t.position.y, t.position.z);
-            contadorX -= 1;
+            counterX -= 1;
         }
         else
         {
             t.position = new Vector3(t.position.x + _step, t.position.y, t.position.z);
-            contadorX += 1;
+            counterX += 1;
         }
         Visibilidad();
     }
@@ -181,16 +181,16 @@ public class MovementAutomaticWithCounter : MonoBehaviour
 
     private void HorizontalFromLeft()
     {
-        if (contadorX <= _limitCounterLeftX)
+        if (counterX <= _limitCounterLeftX)
         {
             MoveToRight();
-            contadorX = _limitCounterLeftX;
+            counterX = _limitCounterLeftX;
         }
 
-        if (contadorX < _limitCounterRightX)
+        if (counterX < _limitCounterRightX)
         {
             t.position = new Vector3(t.position.x + _step, t.position.y, t.position.z);
-            contadorX += 1;
+            counterX += 1;
         }
         Visibilidad();
         Teletransport();
@@ -199,16 +199,16 @@ public class MovementAutomaticWithCounter : MonoBehaviour
 
     private void HorizontalFromRight()
     {
-        if (contadorX >= _limitCounterRightX)
+        if (counterX >= _limitCounterRightX)
         {
             MoveToLeft();
-            contadorX = _limitCounterRightX;
+            counterX = _limitCounterRightX;
         }
 
-        if (contadorX > _limitCounterLeftX)
+        if (counterX > _limitCounterLeftX)
         {
             t.position = new Vector3(t.position.x - _step, t.position.y, t.position.z);
-            contadorX -= 1;
+            counterX -= 1;
         }
 
         Visibilidad();
@@ -217,7 +217,7 @@ public class MovementAutomaticWithCounter : MonoBehaviour
 
     private void Teletransport()
     {
-        if (canTeletransport && (contadorX == _limitCounterLeftX || contadorX == _limitCounterRightX))
+        if (canTeletransport && (counterX == _limitCounterLeftX || counterX == _limitCounterRightX))
         {
             ResetCounter();
         }

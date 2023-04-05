@@ -159,10 +159,9 @@ Transform:
   - {fileID: 1095441161}
   - {fileID: 1259010510}
   - {fileID: 1945570254}
-  - {fileID: 1665061636}
   - {fileID: 136631080}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &136631079
 GameObject:
@@ -197,7 +196,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 49101795}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &136631081
 SpriteRenderer:
@@ -866,7 +865,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &956371784
 GameObject:
@@ -1272,9 +1271,9 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.767, y: 0.082}
-  m_AnchorMax: {x: 0.8933683, y: 0.147}
-  m_AnchoredPosition: {x: 0.3500061, y: -0.08999634}
-  m_SizeDelta: {x: -8, y: -7}
+  m_AnchorMax: {x: 0.9212222, y: 0.162}
+  m_AnchoredPosition: {x: 0.3500061, y: -0.08996582}
+  m_SizeDelta: {x: -28, y: -26}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1239301521
 MonoBehaviour:
@@ -1791,7 +1790,7 @@ RectTransform:
   - {fileID: 699320604}
   - {fileID: 588504677}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1909,12 +1908,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1665061635}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.5, y: 0.468, z: 0}
+  m_LocalPosition: {x: 2.7, y: -2.12, z: -0.07557413}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 49101795}
-  m_RootOrder: 8
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1665061637
 SpriteRenderer:
@@ -2000,15 +1999,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   typeMovementRobot: 0
+  initialPosition: 1
   _step: 0.75
   _velocity: 1
   _limitCounterRightX: 7
   _limitCounterLeftX: 0
-  initialPosition: 1
-  _limitCounterAboveY: 0
-  _limitCounterBelowY: 0
-  contadorX: 0
-  contadorY: 0
+  canTeletransport: 1
 --- !u!1 &1670711124
 GameObject:
   m_ObjectHideFlags: 0
@@ -2221,7 +2217,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2075293963
 GameObject:
