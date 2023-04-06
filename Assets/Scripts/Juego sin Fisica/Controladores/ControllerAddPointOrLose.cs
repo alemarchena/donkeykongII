@@ -11,6 +11,7 @@ public class ControllerAddPointOrLose : MonoBehaviour
     private  List<CharacterObject> listCharacters =new List<CharacterObject>();
     private MovementMap movementMap;
     bool canReact = true;
+    bool canAddPoint = true;
 
     private void Start()
     {
@@ -108,20 +109,22 @@ public class ControllerAddPointOrLose : MonoBehaviour
                     {
                         if(objetoPlayer.posY == objetoEnemy.posY + 1)
                         {
-                            //Las posiciones de caer no valen para ganar puntos
-                            foreach(Vector2 vector in movementMap.posNoCaer)
-                            {
-                                if(vector.x == objetoPlayer.posX && vector.y + 1 == objetoPlayer.posY) //vector.y + 1 ya que la posicion de no caer es al momento de saltar
-                                {
-                                    canReact = false;
-                                    return;
-                                }
-                            }
-
                             if (canReact)
                             {
                                 canReact = false;
-                                Action(objetoPlayer.objectId, TypeAction.AddPoint);
+                                canAddPoint = true;
+                                //Las posiciones de caer no valen para ganar puntos
+                                foreach (Vector2 vector in movementMap.posNoCaer)
+                                {
+                                    if (vector.x == objetoPlayer.posX && vector.y + 1 == objetoPlayer.posY) //vector.y + 1 ya que la posicion de no caer es al momento de saltarwdw 
+                                    {
+                                        canAddPoint = false;
+                                    }
+                                }
+                                if(canAddPoint)
+                                    Action(objetoPlayer.objectId, TypeAction.AddPoint);
+
+                                canAddPoint = true;
                                 Invoke("ChangeCanReact", 0.5f);
                             }
                             return;
