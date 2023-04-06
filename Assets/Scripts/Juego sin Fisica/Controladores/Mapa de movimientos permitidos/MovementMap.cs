@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Movement;
 
-public class MovementMap : MonoBehaviour 
+public sealed class MovementMap : MonoBehaviour 
 {
     public bool cambioPantalla { get; set; }
     public bool estaEnNivelSuperior { get; set; }
@@ -20,6 +20,7 @@ public class MovementMap : MonoBehaviour
     
     [SerializeField] List<Vector2> PosCambioPantalla = new List<Vector2>();
     [SerializeField] List<Vector2> PaseDeNivelSuperior = new List<Vector2>();
+
 
     public List<Vector2> posSalto{get { return PosSalto; }}
     public List<Vector2> posSubir{get { return PosSubir; }}

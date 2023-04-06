@@ -14,7 +14,7 @@ public class Buttons_Movement : MonoBehaviour
         try
         {
             m = GetComponent<Movement>();
-        }catch(Exception e)
+        }catch
         {
             Debug.LogError("Falta el asociar el componente Movement al objeto");
             return;

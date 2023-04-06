@@ -53,9 +53,6 @@ public class Keyboard_Movement : MonoBehaviour
         catch (Exception e) {
             Debug.LogError("Hay un error en el código");
         }
-
-
-        
     }
         
 }

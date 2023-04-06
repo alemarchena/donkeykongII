@@ -11,9 +11,18 @@ public class Movement : MonoBehaviour
     private bool canMove;
     private int counterX;
     private int counterY;
+    public int CounterX
+    {
+        get { return counterX; }
+    }
+    public int CounterY
+    {
+        get { return counterY;}
+    }
 
-    [SerializeField] int originaPositionX=1;
-    [SerializeField] int originaPositionY=0;
+    [SerializeField] int originalPositionX=1;
+    [SerializeField] int originalPositionY=0;
+
 
     Movement()
     {
@@ -25,16 +34,18 @@ public class Movement : MonoBehaviour
     private void Awake()
     {
         mMap = FindObjectOfType<MovementMap>();
-        canMove = false;
+        canMove = true;
         ResetCounter();
+
     }
+
     public float _stepY { get; }
     public float _stepX { get; }
 
     private void ResetCounter()
     {
-        counterX = originaPositionX;
-        counterY = originaPositionY;
+        counterX = originalPositionX;
+        counterY = originalPositionY;
     }
     public void MovementNoControlled(Transform t, TipoMovimiento tm)
     {
@@ -78,6 +89,7 @@ public class Movement : MonoBehaviour
         try
         {
             canMove = false;
+
             switch (tm)
             {
                 case TipoMovimiento.tup:
@@ -92,6 +104,9 @@ public class Movement : MonoBehaviour
                             p = new Vector3(t.position.x, t.position.y + _stepY);
 
                         canMove = true;
+                        t.position = p;
+
+
                     }
 
                     break;
@@ -112,6 +127,7 @@ public class Movement : MonoBehaviour
                             p = new Vector3(t.position.x, t.position.y - _stepY);
 
                         canMove = true;
+                        t.position = p;
 
                     }
                     break;
@@ -123,6 +139,8 @@ public class Movement : MonoBehaviour
                         p = new Vector3(t.position.x - _stepX, t.position.y);
 
                         canMove = true;
+                        t.position = p;
+
                     }
 
                     break;
@@ -133,6 +151,8 @@ public class Movement : MonoBehaviour
                         mMap.contadorX = counterX;
                         p = new Vector3(t.position.x + _stepX, t.position.y);
                         canMove = true;
+                        t.position = p;
+
 
                     }
                     break;
@@ -142,21 +162,19 @@ public class Movement : MonoBehaviour
                         counterY += 1;
                         mMap.contadorY = counterY;
                         p = new Vector3(t.position.x, t.position.y + _stepY);
-                        canMove = true;
+                        t.position = p;
 
                         if (!mMap.noCaer)
-                        StartCoroutine(BajarDelSalto(t));
+                            StartCoroutine(BajarDelSalto(t));
+                        else
+                        {
+                            canMove = true;
+                        }
                     }
                     break;
             }
-
-            if (canMove)
-            {
-                t.position = p;
-
-            }
         }
-        catch (Exception e)
+        catch
         {
             Debug.LogError("No se encontró el mapa de movimientos sin física");
         }
@@ -164,11 +182,13 @@ public class Movement : MonoBehaviour
 
     IEnumerator BajarDelSalto(Transform t)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         counterY -= 1;
-        mMap.contadorY -= counterY;
+        mMap.contadorY = counterY;
         p = new Vector3(t.position.x, t.position.y - _stepY);
         t.position = p;
+        canMove = true;
+
     }
 
 }

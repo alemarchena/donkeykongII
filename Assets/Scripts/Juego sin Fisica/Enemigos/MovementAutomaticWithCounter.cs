@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class MovementAutomaticWithCounter : MonoBehaviour
 {
@@ -49,7 +50,12 @@ public class MovementAutomaticWithCounter : MonoBehaviour
     private float counterTime;
     private bool canMove;
     private int counterX;
-    private Vector3 positionStart;
+
+    public int CounterX
+    {
+        get { return counterX; }
+    }
+    [SerializeField] private Vector3 positionStart;
     
 
     private void Awake()
@@ -58,11 +64,11 @@ public class MovementAutomaticWithCounter : MonoBehaviour
         positionStart = t.position;
 
         sprite = GetComponent<SpriteRenderer>();
-
         ResetTime();
         ResetCounter();
     }
-    
+
+
     private void ResetTime()
     {
         counterTime = 0;
