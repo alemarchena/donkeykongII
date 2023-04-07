@@ -12,11 +12,17 @@ public class ControllerAddPointOrDead : MonoBehaviour
     private MovementMap movementMap;
     bool canReact = true;
     bool canAddPoint = true;
-
+    bool canDiscountLife = true;
     private void Start()
     {
         movementMap = FindObjectOfType<MovementMap>();
     }
+    /// <summary>
+    /// Agrega un personaje a la lista cuando es requerido por cada informante
+    /// </summary>
+    /// <param name="objectRecept"></param>
+    /// <param name="counterX"></param>
+    /// <param name="counterY"></param>
     public void AddGameObject(GameObject objectRecept,int counterX,int counterY)
     {
         CharacterObject characterObject = 
@@ -26,6 +32,12 @@ public class ControllerAddPointOrDead : MonoBehaviour
         listCharacters.Add(characterObject);
     }
 
+    /// <summary>
+    /// Clasifica el tipo de personaje cuando se crea en la lista de personajes
+    /// </summary>
+    /// <param name="characterObject"></param>
+    /// <param name="co"></param>
+    /// <returns></returns>
     private CharacterObject.Type DetectTypeObject(GameObject characterObject, CharacterObject co) {
 
         co = new CharacterObject();
@@ -43,12 +55,24 @@ public class ControllerAddPointOrDead : MonoBehaviour
         return co.type;
     }
 
+    /// <summary>
+    /// Recepciona una notificación de movimiento de algun personaje
+    /// </summary>
+    /// <param name="characterObject"></param>
+    /// <param name="counterX"></param>
+    /// <param name="counterY"></param>
     public void NewPosition(GameObject characterObject, int counterX, int counterY)
     {
-        ReassignPosition(characterObject, counterX ,counterY );
+        UpdatePositionInCharacterList(characterObject, counterX ,counterY );
     }
 
-    private void ReassignPosition(GameObject characterObject, int counterX, int counterY)
+    /// <summary>
+    /// Por cada detección de movimientos de algun personaje actualiza la posicion en la lista de personajes
+    /// </summary>
+    /// <param name="characterObject"></param>
+    /// <param name="counterX"></param>
+    /// <param name="counterY"></param>
+    private void UpdatePositionInCharacterList(GameObject characterObject, int counterX, int counterY)
     {
         for (int a = 0; a < listCharacters.Count; a++)
         {
@@ -73,6 +97,9 @@ public class ControllerAddPointOrDead : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Verifica las posiciones entre los personajes del juego para determinar las posiciones de muerte o ganar puntos al player
+    /// </summary>
     private void VerifiyCollision()
     {
         int j;
@@ -100,8 +127,10 @@ public class ControllerAddPointOrDead : MonoBehaviour
 
                     if (listCharacters[a].posY == listCharacters[b].posY)
                     {
-                        if (listCharacters[a].type == CharacterObject.Type.Player || listCharacters[b].type == CharacterObject.Type.Player )
+                        if (listCharacters[a].type == CharacterObject.Type.Player || listCharacters[b].type == CharacterObject.Type.Player && canDiscountLife)
                         {
+                            canDiscountLife = false;
+                            StartCoroutine(RecoverCanDiscountLife());
                             ActionsInPlayer(objetoPlayer.objectId,TypeAction.DiscountLife);
                             return;
                         }
@@ -145,6 +174,11 @@ public class ControllerAddPointOrDead : MonoBehaviour
         canReact = true;
     }
 
+    /// <summary>
+    /// Determina si el enemigo que tiene debajo genera puntos por saltarlo
+    /// </summary>
+    /// <param name="idInstance"></param>
+    /// <returns></returns>
     private bool QueryIfGivePointEnemy(int idInstance)
     {
         bool result = false;
@@ -170,6 +204,11 @@ public class ControllerAddPointOrDead : MonoBehaviour
         return result;
     }
 
+    /// <summary>
+    /// Las acciones que puede obtener el player son Morir o Ganar puntos
+    /// </summary>
+    /// <param name="idInstance"></param>
+    /// <param name="typeAction"></param>
     private void ActionsInPlayer(int idInstance,TypeAction typeAction)
     {
         GameObject[] gameObjects = (GameObject[]) FindObjectsOfType(typeof(GameObject));
@@ -206,7 +245,15 @@ public class ControllerAddPointOrDead : MonoBehaviour
             }
         }
     }
+
+    IEnumerator RecoverCanDiscountLife()
+    {
+        yield return new WaitForSeconds(0.5f);
+        canDiscountLife = true;
+    }
 }
+
+
 
 public class CharacterObject
 {

@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class InformantMovement : MonoBehaviour
 {
-    private Movement movement;
+    private IntentMovement movement;
     [SerializeField] private int actualCounterX;
     [SerializeField] private int actualCounterY;
     private Player player;
@@ -31,7 +31,7 @@ public class InformantMovement : MonoBehaviour
     {
         try
         {
-            movement = GetComponent<Movement>();
+            movement = GetComponent<IntentMovement>();
             cwl.AddGameObject(this.gameObject, movement.CounterX, movement.CounterY);
         }catch
         {
@@ -58,8 +58,6 @@ public class InformantMovement : MonoBehaviour
             deadNotification = false;
             movement.ResetVectorOriginalPosition();
         }
-
-
     }
 
     public void DeadNotification()

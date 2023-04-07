@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Movement : MonoBehaviour
+public class IntentMovement : MonoBehaviour
 {
     public enum TipoMovimiento { tup, tdown, tleft, tright, tpush }
     public TipoMovimiento tipoMovimiento { get; set; }
@@ -27,7 +27,7 @@ public class Movement : MonoBehaviour
         get { return counterY;}
     }
 
-    Movement()
+    IntentMovement()
     {
         _stepY = 0.6f;
         _stepX = 0.75f;

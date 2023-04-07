@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static Movement;
+using static IntentMovement;
 
 
 public sealed class MovementMap : MonoBehaviour 
