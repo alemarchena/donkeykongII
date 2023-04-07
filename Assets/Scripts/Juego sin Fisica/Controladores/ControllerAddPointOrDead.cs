@@ -102,7 +102,6 @@ public class ControllerAddPointOrDead : MonoBehaviour
     /// </summary>
     private void VerifiyCollision()
     {
-        int j;
         CharacterObject objetoPlayer;
         CharacterObject objetoEnemy;
 
@@ -113,7 +112,7 @@ public class ControllerAddPointOrDead : MonoBehaviour
                 if (listCharacters[a].objectId != listCharacters[b].objectId && 
                     listCharacters[a].posX == listCharacters[b].posX)
                 {
-                        if (listCharacters[a].type == CharacterObject.Type.Player)
+                    if (listCharacters[a].type == CharacterObject.Type.Player)
                     {
                         objetoPlayer = listCharacters[a];
                         objetoEnemy = listCharacters[b];
@@ -194,7 +193,7 @@ public class ControllerAddPointOrDead : MonoBehaviour
                     if (e.givesPoints == Enemy.GivesPoints.Yes)
                         result= true;
                 }
-                catch (Exception e)
+                catch
                 {
                     Debug.LogError("No se encontro el componente player para descontar vida");
                 }

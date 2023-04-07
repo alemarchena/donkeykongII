@@ -129,7 +129,7 @@ public class MovementAutomaticWithCounter : MonoBehaviour
                         HorizontalFromRight();
                         break;
                 }
-            }catch(Exception e)
+            }catch
             {
                 Debug.LogError("No se ha encontrado el componente Transform en el objeto actual");
             }

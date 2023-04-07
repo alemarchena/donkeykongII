@@ -13,8 +13,8 @@ public class IntentMovement : MonoBehaviour
     [SerializeField] int originalCounterPositionY = 0;
     [SerializeField] private Vector3 vectorOriginalPosition;
 
-    [SerializeField] private int counterX;
-    [SerializeField] private int counterY;
+    private int counterX;
+    private int counterY;
     bool isJumping = false;
     private Player player;
 
@@ -98,7 +98,7 @@ public class IntentMovement : MonoBehaviour
            
             t.position = p;
         }
-        catch (Exception e)
+        catch
         {
             Debug.LogError("No se encontró el mapa de movimientos sin física");
         }

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3ca3c0764a270443bd723a370e9f208, type: 3}
+  m_Name: SecuenceKey
+  m_EditorClassIdentifier: 
+  actualPosition: 0
+  secuencePositionKey: []
+  UIsecuencePositionKey: []
+  listStablePositionKey:
+  - {x: 1, y: 2}
+  - {x: 1, y: 6}
+  UiListStablePositionKey:
+  - {x: -0.1, y: 1.3}
+  - {x: -0.1, y: 4.8}
+  listAleatoryPositionKey:
+  - {x: 2, y: 9}
+  - {x: 3, y: 9}
+  - {x: 4, y: 9}
+  - {x: 5, y: 9}
+  UiListAleatoryPositionKey:
+  - {x: 0.8, y: 6.3}
+  - {x: 1.5, y: 6.3}
+  - {x: 2.4, y: 6.3}
+  - {x: 3.15, y: 6.3}

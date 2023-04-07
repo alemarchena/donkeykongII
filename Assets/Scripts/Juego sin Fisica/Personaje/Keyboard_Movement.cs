@@ -50,7 +50,7 @@ public class Keyboard_Movement : MonoBehaviour
                 m.Move(t, IntentMovement.TipoMovimiento.tpush);
             }
         }
-        catch (Exception e) {
+        catch  {
             Debug.LogError("Hay un error en el código");
         }
     }

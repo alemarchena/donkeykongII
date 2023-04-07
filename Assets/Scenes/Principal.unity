@@ -507,7 +507,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 213781373}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.045, y: 1.28, z: 0}
+  m_LocalPosition: {x: -0.13, y: 4.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -526,6 +526,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85bc10dcb56f9b149a40e2e52acd1288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  secuenceKey: {fileID: 11400000, guid: 8916a13d3ddbad444b092bccdede1aca, type: 2}
+  counterX: 0
+  counterY: 0
+  listPositionInUI: []
 --- !u!212 &213781376
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1142,8 +1146,6 @@ MonoBehaviour:
   originalCounterPositionX: 1
   originalCounterPositionY: 0
   vectorOriginalPosition: {x: 0, y: 0, z: 0}
-  counterX: 0
-  counterY: 0
 --- !u!114 &1373414365
 MonoBehaviour:
   m_ObjectHideFlags: 0
