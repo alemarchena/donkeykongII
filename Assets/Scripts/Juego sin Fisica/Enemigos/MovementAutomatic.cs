@@ -9,7 +9,7 @@ public class MovementAutomatic : MonoBehaviour
     [Space]
 
     [Header("Displacement Quantity")]
-    [SerializeField] float _step;
+    [SerializeField] float _step=0.75f;
 
     [SerializeField] float _velocity;
 
@@ -91,7 +91,7 @@ public class MovementAutomatic : MonoBehaviour
                         VerticalFromBelow();
                         break;
                 }
-            }catch(Exception e)
+            }catch
             {
                 Debug.LogError("No se ha encontrado el componente Transform en el objeto actual");
             }

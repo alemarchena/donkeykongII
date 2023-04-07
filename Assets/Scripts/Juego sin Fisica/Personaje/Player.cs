@@ -3,12 +3,29 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private int lifes;
-    private int points;
-    [SerializeField] int initialLife=2;
+    [SerializeField] private int lifes;
+    [SerializeField] private int points;
+    [SerializeField] int initialLife = 2;
+    bool itsAlive = true;
+
+
     private void Awake()
     {
         ResetLifes();
+    }
+
+    public bool ItsAlive{
+        get {   return itsAlive;    }
+    }
+
+    public void Died()
+    {
+        itsAlive = false;
+    }
+
+    public void Revived()
+    {
+        itsAlive = true;
     }
     public int Life
     {
@@ -33,4 +50,6 @@ public class Player : MonoBehaviour
     {
         lifes = initialLife;
     }
+
+
 }

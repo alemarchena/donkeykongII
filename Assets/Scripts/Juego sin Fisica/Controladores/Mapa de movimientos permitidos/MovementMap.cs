@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Movement;
 
+
 public sealed class MovementMap : MonoBehaviour 
 {
     public bool cambioPantalla { get; set; }
@@ -11,14 +12,21 @@ public sealed class MovementMap : MonoBehaviour
     public int contadorY { get; set; }
 
     [Header("Limites de movimiento")]
+    [Tooltip("Vector que indica las posiciones en donde el personaje puede saltar")]
     [SerializeField] List<Vector2> PosSalto = new List<Vector2>();
+    [Tooltip("Vector que indica las posiciones en donde el personaje puede subir")]
     [SerializeField] List<Vector2> PosSubir = new List<Vector2>();
+    [Tooltip("Vector que indica las posiciones en donde el personaje puede bajar")]
     [SerializeField] List<Vector2> PosBajar = new List<Vector2>();
+    [Tooltip("Vector que indica las posiciones en donde el personaje puede moverse a la izquierda")]
     [SerializeField] List<Vector2> PosIzquierda = new List<Vector2>();
+    [Tooltip("Vector que indica las posiciones en donde el personaje puede moverse a la derecha")]
     [SerializeField] List<Vector2> PosDerecha   = new List<Vector2>();
+    [Tooltip("Vector que indica las posiciones en donde el personaje puede saltar y no debe caer")]
     [SerializeField] List<Vector2> PosNoCaer    = new List<Vector2>();
-    
+    [Tooltip("Vector que indica las posiciones en donde el personaje esta para cambiar de pantalla tanto arriba como abajo")]
     [SerializeField] List<Vector2> PosCambioPantalla = new List<Vector2>();
+    [Tooltip("Vector que indica las posicion en donde el personaje esta para cambiar de pantalla al bajar")]
     [SerializeField] List<Vector2> PaseDeNivelSuperior = new List<Vector2>();
 
 

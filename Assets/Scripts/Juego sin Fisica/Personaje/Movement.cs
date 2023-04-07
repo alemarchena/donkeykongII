@@ -9,8 +9,15 @@ public class Movement : MonoBehaviour
 
     private Vector3 p;
     private bool canMove;
-    private int counterX;
-    private int counterY;
+    [SerializeField] int originalCounterPositionX = 1;
+    [SerializeField] int originalCounterPositionY = 0;
+    [SerializeField] private Vector3 vectorOriginalPosition;
+
+    [SerializeField] private int counterX;
+    [SerializeField] private int counterY;
+    bool isJumping = false;
+    private Player player;
+
     public int CounterX
     {
         get { return counterX; }
@@ -19,10 +26,6 @@ public class Movement : MonoBehaviour
     {
         get { return counterY;}
     }
-
-    [SerializeField] int originalPositionX=1;
-    [SerializeField] int originalPositionY=0;
-
 
     Movement()
     {
@@ -34,7 +37,9 @@ public class Movement : MonoBehaviour
     private void Awake()
     {
         mMap = FindObjectOfType<MovementMap>();
+        player =FindObjectOfType<Player>();
         canMove = true;
+        vectorOriginalPosition = transform.position;
         ResetCounter();
 
     }
@@ -44,8 +49,24 @@ public class Movement : MonoBehaviour
 
     private void ResetCounter()
     {
-        counterX = originalPositionX;
-        counterY = originalPositionY;
+        counterX = originalCounterPositionX;
+        counterY = originalCounterPositionY;
+    }
+    public void ResetVectorOriginalPosition()
+    {
+        ResetCounter();
+        transform.position = vectorOriginalPosition;
+        mMap.Reiniciar();
+        
+
+        if (isJumping) //Es el caso de saltar y morir en el salto
+        {
+           StartCoroutine(SubirDeLaMuerte());
+        }else
+        {
+            player.Revived();
+        }
+        
     }
     public void MovementNoControlled(Transform t, TipoMovimiento tm)
     {
@@ -88,95 +109,112 @@ public class Movement : MonoBehaviour
     {
         try
         {
-            canMove = false;
-
-            switch (tm)
+            if(player.ItsAlive)
             {
-                case TipoMovimiento.tup:
-                    if (mMap.CheckMove(TipoMovimiento.tup, new Vector2(mMap.contadorX, mMap.contadorY)))
-                    {
-                        counterY += 1;
-                        mMap.contadorY = counterY;
-                        if(mMap.cambioPantalla == true)
+                canMove = false;
+                switch (tm)
+                {
+                    case TipoMovimiento.tup:
+                        if (mMap.CheckMove(TipoMovimiento.tup, new Vector2(mMap.contadorX, mMap.contadorY)))
                         {
-                            p = new Vector3(t.position.x, t.position.y + _stepY * 3);
-                        }else
-                            p = new Vector3(t.position.x, t.position.y + _stepY);
+                            isJumping = false;
 
-                        canMove = true;
-                        t.position = p;
+                            counterY += 1;
+                            mMap.contadorY = counterY;
+                            if(mMap.cambioPantalla == true)
+                            {
+                                p = new Vector3(t.position.x, t.position.y + _stepY * 3);
+                            }else
+                                p = new Vector3(t.position.x, t.position.y + _stepY);
+
+                            canMove = true;
+                            t.position = p;
 
 
-                    }
+                        }
 
-                    break;
-                case TipoMovimiento.tdown:
-                    if (mMap.CheckMove(TipoMovimiento.tdown, new Vector2(mMap.contadorX, mMap.contadorY)))
-                    {
-                        counterY -= 1;
-                        mMap.contadorY = counterY;
-
-                        if (mMap.cambioPantalla == true)
+                        break;
+                    case TipoMovimiento.tdown:
+                        if (mMap.CheckMove(TipoMovimiento.tdown, new Vector2(mMap.contadorX, mMap.contadorY)))
                         {
-                            if(mMap.estaEnNivelSuperior)
-                                p = new Vector3(t.position.x, t.position.y - _stepY * 3);
+                            isJumping = false;
+
+                            counterY -= 1;
+                            mMap.contadorY = counterY;
+
+                            if (mMap.cambioPantalla == true)
+                            {
+                                if(mMap.estaEnNivelSuperior)
+                                    p = new Vector3(t.position.x, t.position.y - _stepY * 3);
+                                else
+                                    p = new Vector3(t.position.x, t.position.y - _stepY);
+                            }
                             else
                                 p = new Vector3(t.position.x, t.position.y - _stepY);
-                        }
-                        else
-                            p = new Vector3(t.position.x, t.position.y - _stepY);
 
-                        canMove = true;
-                        t.position = p;
-
-                    }
-                    break;
-                case TipoMovimiento.tleft:
-                    if (mMap.CheckMove(TipoMovimiento.tleft, new Vector2(mMap.contadorX, mMap.contadorY)))
-                    {
-                        counterX -= 1;
-                        mMap.contadorX = counterX;
-                        p = new Vector3(t.position.x - _stepX, t.position.y);
-
-                        canMove = true;
-                        t.position = p;
-
-                    }
-
-                    break;
-                case TipoMovimiento.tright:
-                    if (mMap.CheckMove(TipoMovimiento.tright, new Vector2(mMap.contadorX, mMap.contadorY)))
-                    {
-                        counterX += 1;
-                        mMap.contadorX = counterX;
-                        p = new Vector3(t.position.x + _stepX, t.position.y);
-                        canMove = true;
-                        t.position = p;
-
-
-                    }
-                    break;
-                case TipoMovimiento.tpush:
-                    if (mMap.CheckMove(TipoMovimiento.tpush, new Vector2(mMap.contadorX, mMap.contadorY)))
-                    {
-                        counterY += 1;
-                        mMap.contadorY = counterY;
-                        p = new Vector3(t.position.x, t.position.y + _stepY);
-                        t.position = p;
-
-                        if (!mMap.noCaer)
-                            StartCoroutine(BajarDelSalto(t));
-                        else
-                        {
                             canMove = true;
+                            t.position = p;
+
                         }
-                    }
-                    break;
+                        break;
+                    case TipoMovimiento.tleft:
+                        if (mMap.CheckMove(TipoMovimiento.tleft, new Vector2(mMap.contadorX, mMap.contadorY)))
+                        {
+                            isJumping = false;
+
+                            counterX -= 1;
+                            mMap.contadorX = counterX;
+                            p = new Vector3(t.position.x - _stepX, t.position.y);
+
+                            canMove = true;
+                            t.position = p;
+
+                        }
+
+                        break;
+                    case TipoMovimiento.tright:
+                        if (mMap.CheckMove(TipoMovimiento.tright, new Vector2(mMap.contadorX, mMap.contadorY)))
+                        {
+                            isJumping = false;
+
+                            counterX += 1;
+                            mMap.contadorX = counterX;
+                            p = new Vector3(t.position.x + _stepX, t.position.y);
+                            canMove = true;
+                            t.position = p;
+
+
+                        }
+                        break;
+                    case TipoMovimiento.tpush:
+                        if (mMap.CheckMove(TipoMovimiento.tpush, new Vector2(mMap.contadorX, mMap.contadorY)))
+                        {
+                            isJumping = true;
+
+                            counterY += 1;
+                            mMap.contadorY = counterY;
+                            p = new Vector3(t.position.x, t.position.y + _stepY);
+                            t.position = p;
+
+                            if (!mMap.noCaer)
+                                StartCoroutine(BajarDelSalto(t));
+                            else
+                            {
+                                canMove = true;
+                            }
+                        }
+                        break;
+                }
             }
+
         }
         catch
         {
-            Debug.LogError("No se encontró el mapa de movimientos sin física");
+            if(!mMap)
+                Debug.LogError("No se encontró el mapa de movimientos sin física");
+
+            if (!player)
+                Debug.LogError("No se encontró el Player");
         }
     }
 
@@ -191,4 +229,14 @@ public class Movement : MonoBehaviour
 
     }
 
+    IEnumerator SubirDeLaMuerte()
+    {
+        yield return new WaitForSeconds(1.1f);
+        counterY += 1;
+        mMap.contadorY = counterY;
+        transform.position = new Vector3(transform.position.x, transform.position.y + _stepY);
+        canMove = true;
+        isJumping = false;
+        player.Revived();
+    }
 }

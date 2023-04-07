@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ControllerAddPointOrLose : MonoBehaviour 
+public class ControllerAddPointOrDead : MonoBehaviour 
 {
     enum TypeAction { AddPoint,DiscountLife }
     TypeAction typeAction;
@@ -17,7 +17,7 @@ public class ControllerAddPointOrLose : MonoBehaviour
     {
         movementMap = FindObjectOfType<MovementMap>();
     }
-    public void AddGameObject(GameObject objectRecept,int counterX=0,int counterY=0)
+    public void AddGameObject(GameObject objectRecept,int counterX,int counterY)
     {
         CharacterObject characterObject = 
             new CharacterObject(objectRecept, objectRecept.name,counterX,counterY, objectRecept.GetInstanceID());
@@ -29,22 +29,21 @@ public class ControllerAddPointOrLose : MonoBehaviour
     private CharacterObject.Type DetectTypeObject(GameObject characterObject, CharacterObject co) {
 
         co = new CharacterObject();
+        co.type = CharacterObject.Type.None;
 
-        if (characterObject.TryGetComponent<Enemy>(out Enemy enemy))
+        if (characterObject.GetComponent<Enemy>())
         {
             co.type = CharacterObject.Type.Enemy;
         }
-        if (characterObject.TryGetComponent<Player>(out Player player))
+        if (characterObject.GetComponent<Player>())
         {
             co.type = CharacterObject.Type.Player;
         }
-        else
-            co.type = CharacterObject.Type.None;
 
         return co.type;
     }
 
-    public void NewPosition(GameObject characterObject, int counterX = 0, int counterY = 1)
+    public void NewPosition(GameObject characterObject, int counterX, int counterY)
     {
         ReassignPosition(characterObject, counterX ,counterY );
     }
@@ -82,27 +81,28 @@ public class ControllerAddPointOrLose : MonoBehaviour
 
         for (int a=0;a<listCharacters.Count ;a++)
         {
-            if(a + 1 < listCharacters.Count )
+            for (int b = a+1; b < listCharacters.Count; b++)
             {
-                if (listCharacters[a].objectId != listCharacters[a + 1].objectId && listCharacters[a].posX == listCharacters[a + 1].posX)
+                if (listCharacters[a].objectId != listCharacters[b].objectId && 
+                    listCharacters[a].posX == listCharacters[b].posX)
                 {
-                    if (listCharacters[a].type == CharacterObject.Type.Player)
+                        if (listCharacters[a].type == CharacterObject.Type.Player)
                     {
                         objetoPlayer = listCharacters[a];
-                        objetoEnemy = listCharacters[a + 1];
+                        objetoEnemy = listCharacters[b];
                     }
                     else
                     {
-                        objetoPlayer = listCharacters[a + 1];
+                        objetoPlayer = listCharacters[b];
                         objetoEnemy = listCharacters[a];
                     }
 
 
-                    if (listCharacters[a].posY == listCharacters[a + 1].posY)
+                    if (listCharacters[a].posY == listCharacters[b].posY)
                     {
-                        if (listCharacters[a].type == CharacterObject.Type.Player || listCharacters[a+1].type == CharacterObject.Type.Player )
+                        if (listCharacters[a].type == CharacterObject.Type.Player || listCharacters[b].type == CharacterObject.Type.Player )
                         {
-                            Action(objetoPlayer.objectId,TypeAction.DiscountLife);
+                            ActionsInPlayer(objetoPlayer.objectId,TypeAction.DiscountLife);
                             return;
                         }
                     } else
@@ -116,13 +116,17 @@ public class ControllerAddPointOrLose : MonoBehaviour
                                 //Las posiciones de caer no valen para ganar puntos
                                 foreach (Vector2 vector in movementMap.posNoCaer)
                                 {
-                                    if (vector.x == objetoPlayer.posX && vector.y + 1 == objetoPlayer.posY) //vector.y + 1 ya que la posicion de no caer es al momento de saltarwdw 
+                                    if (vector.x == objetoPlayer.posX && vector.y + 1 == objetoPlayer.posY) 
+                                        //Es vector.y + 1 ya que la posicion de no caer es al momento de saltar 
                                     {
                                         canAddPoint = false;
                                     }
                                 }
                                 if(canAddPoint)
-                                    Action(objetoPlayer.objectId, TypeAction.AddPoint);
+                                {
+                                    if(QueryIfGivePointEnemy(objetoEnemy.objectId))
+                                        ActionsInPlayer(objetoPlayer.objectId, TypeAction.AddPoint);
+                                }
 
                                 canAddPoint = true;
                                 Invoke("ChangeCanReact", 0.5f);
@@ -131,6 +135,7 @@ public class ControllerAddPointOrLose : MonoBehaviour
                         }
                     }
                 }
+                
             }
         }
     }
@@ -140,19 +145,20 @@ public class ControllerAddPointOrLose : MonoBehaviour
         canReact = true;
     }
 
-    private void Action(int idInstance,TypeAction typeAction)
+    private bool QueryIfGivePointEnemy(int idInstance)
     {
-        GameObject[] gameObjects = (GameObject[]) FindObjectsOfType(typeof(GameObject));
+        bool result = false;
+        GameObject[] gameObjects = (GameObject[])FindObjectsOfType(typeof(GameObject));
         foreach (GameObject gameObject in gameObjects)
         {
             if (gameObject.GetInstanceID() == idInstance)
             {
                 try
                 {
-                    if(typeAction == TypeAction.DiscountLife)
-                        gameObject.GetComponent<Player>().DiscountLife();
-                    else if (typeAction == TypeAction.AddPoint)
-                        gameObject.GetComponent<Player>().AddPoint();
+                    Enemy e = gameObject.GetComponent<Enemy>();
+
+                    if (e.givesPoints == Enemy.GivesPoints.Yes)
+                        result= true;
                 }
                 catch (Exception e)
                 {
@@ -161,9 +167,46 @@ public class ControllerAddPointOrLose : MonoBehaviour
                 break;
             }
         }
+        return result;
+    }
+
+    private void ActionsInPlayer(int idInstance,TypeAction typeAction)
+    {
+        GameObject[] gameObjects = (GameObject[]) FindObjectsOfType(typeof(GameObject));
+        foreach (GameObject gameObject in gameObjects)
+        {
+            if (gameObject.GetInstanceID() == idInstance)
+            {
+                try
+                {
+                    Player p = gameObject.GetComponent<Player>();
+                    
+                    if(typeAction == TypeAction.DiscountLife)
+                    {
+                        if(p.ItsAlive)
+                        {
+                           gameObject.GetComponent<InformantMovement>().DeadNotification();
+                           p.DiscountLife();
+                        }
+
+                    }
+                    else if (typeAction == TypeAction.AddPoint)
+                    {
+                        if (p.ItsAlive)
+                        {
+                            p.AddPoint();
+                        }
+                    }
+                }
+                catch
+                {
+                    Debug.LogError("No se encontro el componente player para descontar vida");
+                }
+                break;
+            }
+        }
     }
 }
-
 
 public class CharacterObject
 {

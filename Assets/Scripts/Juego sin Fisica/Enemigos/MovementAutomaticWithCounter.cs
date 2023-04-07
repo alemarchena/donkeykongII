@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class MovementAutomaticWithCounter : MonoBehaviour
 {
@@ -8,6 +7,7 @@ public class MovementAutomaticWithCounter : MonoBehaviour
     public enum InitialPosition { Left, Right }
 
     [SerializeField] TypeMovementAutomatic typeMovementRobot;
+    [Tooltip("Establece la posicion inicial en pantalla del objeto")]
     [SerializeField] InitialPosition initialPosition;
     [Space]
 
@@ -17,6 +17,19 @@ public class MovementAutomaticWithCounter : MonoBehaviour
     [Range(0, 10)]
     [SerializeField] float _velocity;
 
+    [Tooltip("Establece el contador inicial en X del objeto")]
+    [SerializeField] private int counterX;
+    [Tooltip("Establece el contador inicial en Y del objeto")]
+    [SerializeField] private int counterY;
+
+    public int CounterX
+    {
+        get { return counterX; }
+    }
+    public int CounterY
+    {
+        get { return counterY; }
+    }
 
     /// <summary>
     /// Un valor flotante entre cero y diez
@@ -49,12 +62,8 @@ public class MovementAutomaticWithCounter : MonoBehaviour
     private Transform t;
     private float counterTime;
     private bool canMove;
-    private int counterX;
 
-    public int CounterX
-    {
-        get { return counterX; }
-    }
+
     [SerializeField] private Vector3 positionStart;
     
 
