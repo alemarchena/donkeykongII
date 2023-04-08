@@ -9,14 +9,11 @@ public class ControllerAddPointOrDead : MonoBehaviour
     TypeAction typeAction;
 
     private  List<CharacterObject> listCharacters =new List<CharacterObject>();
-    private MovementMap movementMap;
+    [SerializeField] PlayerMovementMap playerMovementMap;
     bool canReact = true;
     bool canAddPoint = true;
     bool canDiscountLife = true;
-    private void Start()
-    {
-        movementMap = FindObjectOfType<MovementMap>();
-    }
+    
     /// <summary>
     /// Agrega un personaje a la lista cuando es requerido por cada informante
     /// </summary>
@@ -142,7 +139,7 @@ public class ControllerAddPointOrDead : MonoBehaviour
                                 canReact = false;
                                 canAddPoint = true;
                                 //Las posiciones de caer no valen para ganar puntos
-                                foreach (Vector2 vector in movementMap.posNoCaer)
+                                foreach (Vector2 vector in playerMovementMap.posNoCaer)
                                 {
                                     if (vector.x == objetoPlayer.posX && vector.y + 1 == objetoPlayer.posY) 
                                         //Es vector.y + 1 ya que la posicion de no caer es al momento de saltar 

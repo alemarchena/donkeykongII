@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class IntentMovement : MonoBehaviour
 {
+    [SerializeField] PlayerMovementMap playerMovementMap;
+
     public enum TipoMovimiento { tup, tdown, tleft, tright, tpush }
     public TipoMovimiento tipoMovimiento { get; set; }
 
@@ -32,16 +34,19 @@ public class IntentMovement : MonoBehaviour
         _stepY = 0.6f;
         _stepX = 0.75f;
     }
-    MovementMap mMap;
 
     private void Awake()
     {
-        mMap = FindObjectOfType<MovementMap>();
         player =FindObjectOfType<Player>();
         canMove = true;
         vectorOriginalPosition = transform.position;
         ResetCounter();
 
+    }
+
+    private void Start()
+    {
+        playerMovementMap.Reiniciar();
     }
 
     public float _stepY { get; }
@@ -56,7 +61,7 @@ public class IntentMovement : MonoBehaviour
     {
         ResetCounter();
         transform.position = vectorOriginalPosition;
-        mMap.Reiniciar();
+        playerMovementMap.Reiniciar();
         
 
         if (isJumping) //Es el caso de saltar y morir en el salto
@@ -115,13 +120,13 @@ public class IntentMovement : MonoBehaviour
                 switch (tm)
                 {
                     case TipoMovimiento.tup:
-                        if (mMap.CheckMove(TipoMovimiento.tup, new Vector2(mMap.contadorX, mMap.contadorY)))
+                        if (playerMovementMap.CheckMove(TipoMovimiento.tup, new Vector2(playerMovementMap.contadorX, playerMovementMap.contadorY)))
                         {
                             isJumping = false;
 
                             counterY += 1;
-                            mMap.contadorY = counterY;
-                            if(mMap.cambioPantalla == true)
+                            playerMovementMap.contadorY = counterY;
+                            if(playerMovementMap.cambioPantalla == true)
                             {
                                 p = new Vector3(t.position.x, t.position.y + _stepY * 3);
                             }else
@@ -129,22 +134,20 @@ public class IntentMovement : MonoBehaviour
 
                             canMove = true;
                             t.position = p;
-
-
                         }
 
                         break;
                     case TipoMovimiento.tdown:
-                        if (mMap.CheckMove(TipoMovimiento.tdown, new Vector2(mMap.contadorX, mMap.contadorY)))
+                        if (playerMovementMap.CheckMove(TipoMovimiento.tdown, new Vector2(playerMovementMap.contadorX, playerMovementMap.contadorY)))
                         {
                             isJumping = false;
 
                             counterY -= 1;
-                            mMap.contadorY = counterY;
+                            playerMovementMap.contadorY = counterY;
 
-                            if (mMap.cambioPantalla == true)
+                            if (playerMovementMap.cambioPantalla == true)
                             {
-                                if(mMap.estaEnNivelSuperior)
+                                if(playerMovementMap.estaEnNivelSuperior)
                                     p = new Vector3(t.position.x, t.position.y - _stepY * 3);
                                 else
                                     p = new Vector3(t.position.x, t.position.y - _stepY);
@@ -154,49 +157,44 @@ public class IntentMovement : MonoBehaviour
 
                             canMove = true;
                             t.position = p;
-
                         }
                         break;
                     case TipoMovimiento.tleft:
-                        if (mMap.CheckMove(TipoMovimiento.tleft, new Vector2(mMap.contadorX, mMap.contadorY)))
+                        if (playerMovementMap.CheckMove(TipoMovimiento.tleft, new Vector2(playerMovementMap.contadorX, playerMovementMap.contadorY)))
                         {
                             isJumping = false;
 
                             counterX -= 1;
-                            mMap.contadorX = counterX;
+                            playerMovementMap.contadorX = counterX;
                             p = new Vector3(t.position.x - _stepX, t.position.y);
 
                             canMove = true;
                             t.position = p;
-
                         }
-
                         break;
                     case TipoMovimiento.tright:
-                        if (mMap.CheckMove(TipoMovimiento.tright, new Vector2(mMap.contadorX, mMap.contadorY)))
+                        if (playerMovementMap.CheckMove(TipoMovimiento.tright, new Vector2(playerMovementMap.contadorX, playerMovementMap.contadorY)))
                         {
                             isJumping = false;
 
                             counterX += 1;
-                            mMap.contadorX = counterX;
+                            playerMovementMap.contadorX = counterX;
                             p = new Vector3(t.position.x + _stepX, t.position.y);
                             canMove = true;
                             t.position = p;
-
-
                         }
                         break;
                     case TipoMovimiento.tpush:
-                        if (mMap.CheckMove(TipoMovimiento.tpush, new Vector2(mMap.contadorX, mMap.contadorY)))
+                        if (playerMovementMap.CheckMove(TipoMovimiento.tpush, new Vector2(playerMovementMap.contadorX, playerMovementMap.contadorY)))
                         {
                             isJumping = true;
 
                             counterY += 1;
-                            mMap.contadorY = counterY;
+                            playerMovementMap.contadorY = counterY;
                             p = new Vector3(t.position.x, t.position.y + _stepY);
                             t.position = p;
 
-                            if (!mMap.noCaer)
+                            if (!playerMovementMap.noCaer)
                                 StartCoroutine(BajarDelSalto(t));
                             else
                             {
@@ -206,11 +204,10 @@ public class IntentMovement : MonoBehaviour
                         break;
                 }
             }
-
         }
         catch
         {
-            if(!mMap)
+            if(!playerMovementMap)
                 Debug.LogError("No se encontró el mapa de movimientos sin física");
 
             if (!player)
@@ -222,7 +219,7 @@ public class IntentMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         counterY -= 1;
-        mMap.contadorY = counterY;
+        playerMovementMap.contadorY = counterY;
         p = new Vector3(t.position.x, t.position.y - _stepY);
         t.position = p;
         canMove = true;
@@ -233,7 +230,7 @@ public class IntentMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(1.1f);
         counterY += 1;
-        mMap.contadorY = counterY;
+        playerMovementMap.contadorY = counterY;
         transform.position = new Vector3(transform.position.x, transform.position.y + _stepY);
         canMove = true;
         isJumping = false;

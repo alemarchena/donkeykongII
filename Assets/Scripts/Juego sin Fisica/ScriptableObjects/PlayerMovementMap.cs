@@ -1,9 +1,10 @@
+
 using System.Collections.Generic;
 using UnityEngine;
 using static IntentMovement;
 
-
-public sealed class MovementMap : MonoBehaviour 
+[CreateAssetMenu( fileName = "Player Movement Map", menuName = "Items/Player movement Map")] 
+public class PlayerMovementMap : ScriptableObject
 {
     public bool cambioPantalla { get; set; }
     public bool estaEnNivelSuperior { get; set; }
@@ -21,31 +22,27 @@ public sealed class MovementMap : MonoBehaviour
     [Tooltip("Vector que indica las posiciones en donde el personaje puede moverse a la izquierda")]
     [SerializeField] List<Vector2> PosIzquierda = new List<Vector2>();
     [Tooltip("Vector que indica las posiciones en donde el personaje puede moverse a la derecha")]
-    [SerializeField] List<Vector2> PosDerecha   = new List<Vector2>();
+    [SerializeField] List<Vector2> PosDerecha = new List<Vector2>();
     [Tooltip("Vector que indica las posiciones en donde el personaje puede saltar y no debe caer")]
-    [SerializeField] List<Vector2> PosNoCaer    = new List<Vector2>();
+    [SerializeField] List<Vector2> PosNoCaer = new List<Vector2>();
     [Tooltip("Vector que indica las posiciones en donde el personaje esta para cambiar de pantalla tanto arriba como abajo")]
     [SerializeField] List<Vector2> PosCambioPantalla = new List<Vector2>();
     [Tooltip("Vector que indica las posicion en donde el personaje esta para cambiar de pantalla al bajar")]
     [SerializeField] List<Vector2> PaseDeNivelSuperior = new List<Vector2>();
 
 
-    public List<Vector2> posSalto{get { return PosSalto; }}
-    public List<Vector2> posSubir{get { return PosSubir; }}
-    public List<Vector2> posBajar{get { return PosBajar; }}
-    public List<Vector2> posDerecha{get { return PosDerecha; }}
-    public List<Vector2> posIzquierda{get { return PosIzquierda; } }
+    public List<Vector2> posSalto { get { return PosSalto; } }
+    public List<Vector2> posSubir { get { return PosSubir; } }
+    public List<Vector2> posBajar { get { return PosBajar; } }
+    public List<Vector2> posDerecha { get { return PosDerecha; } }
+    public List<Vector2> posIzquierda { get { return PosIzquierda; } }
     public List<Vector2> posCambioPantalla { get { return PosCambioPantalla; } }
     public List<Vector2> paseDeNivelSuperior { get { return PaseDeNivelSuperior; } }
     public List<Vector2> posNoCaer { get { return PosNoCaer; } }
 
-    private void Start()
-    {
-        Reiniciar();
-    }
     public void Reiniciar()
     {
-        cambioPantalla      = false;
+        cambioPantalla = false;
         estaEnNivelSuperior = false;
         noCaer = false;
         contadorX = 1;

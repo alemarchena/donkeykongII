@@ -9,9 +9,9 @@ public class Key : MonoBehaviour
 {
 
     [SerializeField] private SecuenceKey secuenceKey;
-    [SerializeField] private List<Vector2> listPositionInUI = new List<Vector2>();
-    [SerializeField] private int counterX;
-    [SerializeField] private int counterY;
+    private List<Vector2> listPositionInUI = new List<Vector2>();
+    private int counterX;
+    private int counterY;
     /// <summary>
     /// Lista de posiciones Transform.position de la secuencia de la llave
     /// </summary>
