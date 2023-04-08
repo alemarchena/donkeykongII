@@ -8,8 +8,8 @@ using UnityEngine;
 public class SecuenceKey : ScriptableObject
 {
     private int actualPositionInSecuence =0;
-    private List<Vector2> secuencePositionKey;
-    private List<Vector2> UiSecuencePositionKey;
+    [SerializeField] private List<Vector2> secuencePositionKey;
+    [SerializeField] private List<Vector2> UiSecuencePositionKey;
 
     public int ActualPosition
     {
@@ -67,9 +67,22 @@ public class SecuenceKey : ScriptableObject
         return newPos;
     }
 
+    public void RemovePosition(Vector2 vector)
+    {
+        for (int a = 0; a < secuencePositionKey.Count; a++)
+        {
+            if (secuencePositionKey[a].x == vector.x && secuencePositionKey[a].y == vector.y)
+            {
+                secuencePositionKey.RemoveAt(a-1);      //elimina de la lista la posicion usada del contador
+                UiSecuencePositionKey.RemoveAt(a - 1);  //elimina de la lista la posicion usada de la UI
+            }
+        }
+    }
+
     public void ResetPositionInSecuence()
     {
         actualPositionInSecuence = 0;
+
     }
 
     public void AddPositions(out List<Vector2> listPositionInUI)

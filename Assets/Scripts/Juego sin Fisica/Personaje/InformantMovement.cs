@@ -7,13 +7,15 @@ using UnityEngine;
 
 public class InformantMovement : MonoBehaviour
 {
-    private IntentMovement movement;
     [SerializeField] private int actualCounterX;
     [SerializeField] private int actualCounterY;
-    private Player player;
-    private bool deadNotification=false;
 
-    ControllerAddPointOrDead cwl;
+    private ControllerAddPointOrDead controllerAddPointOrDead;
+    private Player player;
+    private ControllerMovementKey controllerMovementKey;
+
+    private IntentMovement intentMovement;
+    private bool deadNotification=false;
     private InformantMovement()
     {
 
@@ -21,9 +23,9 @@ public class InformantMovement : MonoBehaviour
 
     private void Awake()
     {
-        cwl = FindObjectOfType<ControllerAddPointOrDead>();
+        controllerAddPointOrDead = FindObjectOfType<ControllerAddPointOrDead>();
         player = FindObjectOfType<Player>();
-
+        controllerMovementKey = FindObjectOfType<ControllerMovementKey>();
     }
 
 
@@ -31,11 +33,11 @@ public class InformantMovement : MonoBehaviour
     {
         try
         {
-            movement = GetComponent<IntentMovement>();
-            cwl.AddGameObject(this.gameObject, movement.CounterX, movement.CounterY);
+            intentMovement = GetComponent<IntentMovement>();
+            controllerAddPointOrDead.AddGameObject(this.gameObject, intentMovement.CounterX, intentMovement.CounterY);
         }catch
         {
-            Debug.LogError("El objeto necesita contener la clase Movement para utilizar el informante");
+            Debug.LogError("El objeto necesita contener la clase InformantMovement para utilizar el informante");
         }
     }
 
@@ -46,17 +48,19 @@ public class InformantMovement : MonoBehaviour
 
         if(!deadNotification)
         {
-            if (movement.CounterX != actualCounterX || movement.CounterY != actualCounterY)
+            if (intentMovement.CounterX != actualCounterX || intentMovement.CounterY != actualCounterY)
             {
-                actualCounterX = movement.CounterX;
-                actualCounterY = movement.CounterY;
-                cwl.NewPosition(this.gameObject, movement.CounterX, movement.CounterY);
+                actualCounterX = intentMovement.CounterX;
+                actualCounterY = intentMovement.CounterY;
+
+                controllerAddPointOrDead.NewPosition(this.gameObject, actualCounterX, actualCounterY);
+                controllerMovementKey.NewPositionPlayer(this.gameObject, actualCounterX, actualCounterY);
             }
         }
         else
         {
             deadNotification = false;
-            movement.ResetVectorOriginalPosition();
+            intentMovement.ResetVectorOriginalPosition();
         }
     }
 
