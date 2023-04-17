@@ -12,10 +12,10 @@ public class MovementAutomaticWithCounter : MonoBehaviour
     [Space]
 
     [Header("Displacement Quantity")]
-    [SerializeField] float _step;
+    [SerializeField] float _step=0.75f;
 
     [Range(0, 10)]
-    [SerializeField] float _velocity;
+    [SerializeField] float _velocity=1f;
 
     [Tooltip("Establece el contador inicial en X del objeto")]
     [SerializeField] private int counterX;

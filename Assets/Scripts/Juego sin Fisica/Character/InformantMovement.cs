@@ -12,9 +12,9 @@ public class InformantMovement : MonoBehaviour
 
     private ControllerAddPointOrDead controllerAddPointOrDead;
     private Player player;
-    private ControllerMovementKey controllerMovementKey;
+    [SerializeField] private ControllerCollisionPlayerKey controllerMovementKey;
 
-    private IntentMovement intentMovement;
+    [SerializeField] private IntentMovement intentMovement;
     private bool deadNotification=false;
     private InformantMovement()
     {
@@ -25,7 +25,7 @@ public class InformantMovement : MonoBehaviour
     {
         controllerAddPointOrDead = FindObjectOfType<ControllerAddPointOrDead>();
         player = FindObjectOfType<Player>();
-        controllerMovementKey = FindObjectOfType<ControllerMovementKey>();
+        controllerMovementKey = FindObjectOfType<ControllerCollisionPlayerKey>();
     }
 
 
@@ -37,7 +37,11 @@ public class InformantMovement : MonoBehaviour
             controllerAddPointOrDead.AddGameObject(this.gameObject, intentMovement.CounterX, intentMovement.CounterY);
         }catch
         {
-            Debug.LogError("El objeto necesita contener la clase InformantMovement para utilizar el informante");
+            if(!intentMovement)
+            Debug.LogError("El objeto necesita contener la clase IntentMovement para utilizar el informante");
+
+            if (!controllerAddPointOrDead)
+                Debug.LogError("El objeto necesita contener la clase ControllerCollisionPlayerKey para utilizar el informante");
         }
     }
 

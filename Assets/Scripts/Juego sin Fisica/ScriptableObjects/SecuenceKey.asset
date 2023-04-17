@@ -12,19 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ca3c0764a270443bd723a370e9f208, type: 3}
   m_Name: SecuenceKey
   m_EditorClassIdentifier: 
-  listStablePositionKey:
+  listCounterPositionKey:
   - {x: 1, y: 2}
   - {x: 1, y: 6}
-  UiListStablePositionKey:
-  - {x: -1.92, y: -1.34}
-  - {x: -2.05, y: 2.2}
-  listAleatoryPositionKey:
   - {x: 2, y: 9}
   - {x: 3, y: 9}
   - {x: 4, y: 9}
   - {x: 5, y: 9}
-  UiListAleatoryPositionKey:
-  - {x: -0.97, y: 3.69}
-  - {x: -0.24, y: 3.69}
-  - {x: 0.57, y: 3.69}
-  - {x: 1.33, y: 3.69}
+  UiListTrasformPositionKey:
+  - {x: -1.92, y: -1.38}
+  - {x: -1.92, y: 2.16}
+  - {x: -0.96, y: 3.7}
+  - {x: -0.23, y: 3.7}
+  - {x: 0.58, y: 3.7}
+  - {x: 1.33, y: 3.7}
+  listIndexPositionKey: 
+  listPositionKey: 

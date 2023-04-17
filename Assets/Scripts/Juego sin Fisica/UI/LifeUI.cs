@@ -12,18 +12,13 @@ public class LifeUI : MonoBehaviour
     [SerializeField] Transform content;
 
     private float stepPositionPrefab = 0.5f;
-    private Player player;
-    private int initialLife;
+    [SerializeField] Player playerObjectInHierarchy;
     private List<GameObject> listGameObjectsPrefab = new List<GameObject>();
     private bool canCreatePrefab = false;
     private void Start()
     {
-
-        player = FindObjectOfType<Player>();
-
         try
         {
-            initialLife = player.Life;
             ResetSpriteLifes();
         }
         catch
@@ -36,7 +31,7 @@ public class LifeUI : MonoBehaviour
     {
         try
         {
-            if(player.Life != listGameObjectsPrefab.Count && canCreatePrefab)
+            if(playerObjectInHierarchy.Life != listGameObjectsPrefab.Count && canCreatePrefab)
             {
                 canCreatePrefab = false;
                 ResetSpriteLifes();
@@ -44,7 +39,7 @@ public class LifeUI : MonoBehaviour
         }
         catch
         {
-            if (!player)
+            if (!playerObjectInHierarchy)
                 Debug.LogError("El componente Player no se encuentra en el juego");
 
         }
@@ -58,7 +53,7 @@ public class LifeUI : MonoBehaviour
 
         try
         {
-            for (int a = 1; a <= player.Life; a++)
+            for (int a = 1; a <= playerObjectInHierarchy.Life; a++)
             {
                 Vector3 newPosition = new Vector3(content.position.x + a * stepPositionPrefab, content.position.y, content.position.z);
                 GameObject gaob = Instantiate(prefabSpritelife, newPosition, Quaternion.identity, content) as GameObject;

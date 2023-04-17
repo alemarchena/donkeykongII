@@ -7,34 +7,40 @@ using UnityEngine;
 /// </summary>
 public class InformantKey : MonoBehaviour
 {
-    ControllerMovementKey cmk;
+    ControllerCollisionPlayerKey cmk;
     Key key;
 
     [SerializeField] private int actualCounterX;
     [SerializeField] private int actualCounterY;
-
     private void Awake()
     {
         try
         {
-            cmk = FindObjectOfType<ControllerMovementKey>();
-            key = FindObjectOfType<Key>();
+            cmk = FindObjectOfType<ControllerCollisionPlayerKey>();
+            key = GetComponent<Key>();
         }
         catch
         {
             if (!cmk) Debug.LogError("Falta la clase ControllerMovementKey en el juego");
-            if (!key) Debug.LogError("Falta la clase Key en el juego");
+            if (!key) Debug.LogError("Falta la clase Key en el objeto que contiene el InformantKey");
         }
     }
 
     private void Start()
     {
-        cmk.AddKey(this.gameObject);
+        cmk.AddKey(key);
+        GetPositionKey();
     }
 
+    private void GetPositionKey()
+    {
+        actualCounterX = key.CounterX;
+        actualCounterY = key.CounterY;
+        cmk.NewPositionKey(this.gameObject, actualCounterX, actualCounterY);
+    }
     void Update()
     {
-        if (key.CounterX != actualCounterX || key.CounterY != actualCounterY)
+        if ((key.CounterX != actualCounterX || key.CounterY != actualCounterY ) && key.LlavesCapturadas < key.LlavesTotales )
         {
             actualCounterX = key.CounterX;
             actualCounterY = key.CounterY;
@@ -42,4 +48,6 @@ public class InformantKey : MonoBehaviour
             cmk.NewPositionKey(this.gameObject, actualCounterX, actualCounterY);
         }
     }
+
+   
 }
