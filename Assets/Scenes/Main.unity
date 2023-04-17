@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 13513454}
   - component: {fileID: 13513455}
   m_Layer: 0
-  m_Name: CandadoDerGrande
+  m_Name: 4-CandadoDerGrande
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,8 +152,8 @@ Transform:
   m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 49101795}
-  m_RootOrder: 5
+  m_Father: {fileID: 1911749247}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &13513455
 SpriteRenderer:
@@ -221,12 +221,9 @@ Transform:
   m_Children:
   - {fileID: 1545406143}
   - {fileID: 114205676}
-  - {fileID: 2003218097}
-  - {fileID: 572415414}
-  - {fileID: 468204593}
-  - {fileID: 13513454}
   - {fileID: 136631089}
   - {fileID: 1023224333}
+  - {fileID: 1911749247}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -664,7 +661,7 @@ GameObject:
   - component: {fileID: 468204593}
   - component: {fileID: 468204594}
   m_Layer: 0
-  m_Name: CandadoDerChico
+  m_Name: 3-CandadoDerChico
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -682,8 +679,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 49101795}
-  m_RootOrder: 4
+  m_Father: {fileID: 1911749247}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &468204594
 SpriteRenderer:
@@ -768,7 +765,7 @@ GameObject:
   - component: {fileID: 572415414}
   - component: {fileID: 572415415}
   m_Layer: 0
-  m_Name: CandadoIzqChico
+  m_Name: 2-CandadoIzqChico
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -786,8 +783,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 49101795}
-  m_RootOrder: 3
+  m_Father: {fileID: 1911749247}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &572415415
 SpriteRenderer:
@@ -1428,6 +1425,59 @@ MonoBehaviour:
   prefabSpritelife: {fileID: 3627833839493405720, guid: 0b0f4aabb21ee3a44abcca234b9de702, type: 3}
   content: {fileID: 49101795}
   playerObjectInHierarchy: {fileID: 1373414367}
+--- !u!1 &1911749246
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1911749247}
+  - component: {fileID: 1911749248}
+  m_Layer: 0
+  m_Name: UILockcontainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1911749247
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911749246}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2003218097}
+  - {fileID: 572415414}
+  - {fileID: 468204593}
+  - {fileID: 13513454}
+  m_Father: {fileID: 49101795}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1911749248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911749246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 425015062eac29b4ab4ac3952f7cd0c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiListLockGameObjects:
+  - {fileID: 2003218096}
+  - {fileID: 572415413}
+  - {fileID: 468204592}
+  - {fileID: 13513453}
 --- !u!1 &2003218096
 GameObject:
   m_ObjectHideFlags: 0
@@ -1439,7 +1489,7 @@ GameObject:
   - component: {fileID: 2003218097}
   - component: {fileID: 2003218098}
   m_Layer: 0
-  m_Name: CandadoIzqGrande
+  m_Name: 1-CandadoIzqGrande
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1457,8 +1507,8 @@ Transform:
   m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 49101795}
-  m_RootOrder: 2
+  m_Father: {fileID: 1911749247}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2003218098
 SpriteRenderer:
