@@ -18,9 +18,10 @@ public class Key : MonoBehaviour
     private bool EstaEnCandado = false;
 
     private Lock listLock;
-
+    private Player player;
     private void Start()
     {
+        player = FindObjectOfType<Player>();
         listLock = FindObjectOfType<Lock>();
         ReInit();
         secuenceKey.GeneratePositionsKey();
@@ -91,6 +92,7 @@ public class Key : MonoBehaviour
                 if(LlavesCapturadas >= LlavesTotales)
                 {
                     ReInit();
+                    player.Winner();
                     return;
                 }
                 ResetVectorOriginalPosition();
