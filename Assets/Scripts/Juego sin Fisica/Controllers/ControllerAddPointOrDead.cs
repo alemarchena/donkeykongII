@@ -214,23 +214,13 @@ public class ControllerAddPointOrDead : MonoBehaviour
             {
                 try
                 {
-                    Player p = gameObject.GetComponent<Player>();
-                    
                     if(typeAction == TypeAction.DiscountLife)
                     {
-                        if(p.ItsAlive)
-                        {
-                           gameObject.GetComponent<InformantMovement>().DeadNotification();
-                           p.DiscountLife();
-                        }
-
+                        gameObject.GetComponent<PlayerInformant>().DeadNotification();
                     }
                     else if (typeAction == TypeAction.AddPoint)
                     {
-                        if (p.ItsAlive)
-                        {
-                            p.AddPoint();
-                        }
+                        gameObject.GetComponent<PlayerInformant>().WinPointNotification();
                     }
                 }
                 catch

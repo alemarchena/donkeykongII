@@ -6,14 +6,14 @@ using UnityEngine;
 public class Buttons_Movement : MonoBehaviour
 {
     Transform t;
-    IntentMovement m;
+    PlayerMovementIntent m;
 
     private void Awake()
     {
         t = GetComponent<Transform>();
         try
         {
-            m = GetComponent<IntentMovement>();
+            m = GetComponent<PlayerMovementIntent>();
         }catch
         {
             Debug.LogError("Falta el asociar el componente Movement al objeto");
@@ -23,26 +23,26 @@ public class Buttons_Movement : MonoBehaviour
 
     public void Up()
     {
-        m.Move(t,IntentMovement.TipoMovimiento.tup);
+        m.Move(t,PlayerMovementIntent.TipoMovimiento.tup);
     }
 
     public void Down()
     {
-        m.Move(t, IntentMovement.TipoMovimiento.tdown);
+        m.Move(t, PlayerMovementIntent.TipoMovimiento.tdown);
     }
 
     public void Left()
     {
-        m.Move(t, IntentMovement.TipoMovimiento.tleft);
+        m.Move(t, PlayerMovementIntent.TipoMovimiento.tleft);
     }
 
     public void Right()
     {
-        m.Move(t, IntentMovement.TipoMovimiento.tright);
+        m.Move(t, PlayerMovementIntent.TipoMovimiento.tright);
     }
 
     public void Jump()
     {
-        m.Move(t, IntentMovement.TipoMovimiento.tpush);
+        m.Move(t, PlayerMovementIntent.TipoMovimiento.tpush);
     }
 }

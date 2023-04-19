@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class MovementAutomaticWithCounter : MonoBehaviour
+public class EnemyMovementAutomaticWithCounter : MonoBehaviour
 {
     public enum TypeMovementAutomatic { HorizontalBounce, HorizontalFromLeft, HorizontalFromRight }
     public enum InitialPosition { Left, Right }

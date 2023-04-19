@@ -12,21 +12,21 @@ public class Key : MonoBehaviour
     public int CounterY { get; private set; }
     public int LlavesCapturadas { get; private set; }
     public int LlavesTotales { get; private set; }
+    public bool Stoped { get; private set; }
 
     private int nextPosicionKey;
     private int temporalPosition = 1;
     private bool EstaEnCandado = false;
 
     private Lock listLock;
-    private Player player;
-    private void Start()
+
+    private void Awake()
     {
-        player = FindObjectOfType<Player>();
         listLock = FindObjectOfType<Lock>();
-        ReInit();
         secuenceKey.GeneratePositionsKey();
     }
-    private void ReInit()
+   
+    public void ReInit()
     {
         try
         {
@@ -36,8 +36,8 @@ public class Key : MonoBehaviour
             LlavesTotales = secuenceKey.ListCounterPosition.Count - 2;
             ResetVectorOriginalPosition();
             secuenceKey.GeneratePositionsKey();
-
             listLock.ActivateLocks();
+            Stoped = false;
         }
         catch (Exception e)
         {
@@ -48,57 +48,58 @@ public class Key : MonoBehaviour
 
     public void SetNewPositionKey()
     {
-        nextPosicionKey += 1;
-
-        if (nextPosicionKey < 2)
+        if (!Stoped)
         {
-            transform.position = secuenceKey.UIListTransformKey[secuenceKey.ListIndexPositionKey[nextPosicionKey]];
+            nextPosicionKey += 1;
 
-            Vector2 vector = secuenceKey.ListCounterPosition[secuenceKey.ListIndexPositionKey[nextPosicionKey]];
-            CounterX = (int)vector.x;
-            CounterY = (int)vector.y;
-            EstaEnCandado = false;
-
-        }
-        else
-        {
-            if(!EstaEnCandado)
+            if (nextPosicionKey < 2)
             {
+                transform.position = secuenceKey.UIListTransformKey[secuenceKey.ListIndexPositionKey[nextPosicionKey]];
 
-                temporalPosition += 1;
-
-                transform.position = secuenceKey.UIListTransformKey[secuenceKey.ListIndexPositionKey[temporalPosition]];
-
-                Vector2 vector = secuenceKey.ListCounterPosition[secuenceKey.ListIndexPositionKey[temporalPosition]];
+                Vector2 vector = secuenceKey.ListCounterPosition[secuenceKey.ListIndexPositionKey[nextPosicionKey]];
                 CounterX = (int)vector.x;
                 CounterY = (int)vector.y;
-                EstaEnCandado = true;
+                EstaEnCandado = false;
 
             }
             else
             {
-                int index = 0;
-                switch (secuenceKey.ListIndexPositionKey[temporalPosition])
+                if(!EstaEnCandado)
                 {
-                    case 2:index = 0;break;
-                    case 3:index = 1;break;
-                    case 4:index = 2;break;
-                    case 5:index = 3;break;
+
+                    temporalPosition += 1;
+
+                    transform.position = secuenceKey.UIListTransformKey[secuenceKey.ListIndexPositionKey[temporalPosition]];
+
+                    Vector2 vector = secuenceKey.ListCounterPosition[secuenceKey.ListIndexPositionKey[temporalPosition]];
+                    CounterX = (int)vector.x;
+                    CounterY = (int)vector.y;
+                    EstaEnCandado = true;
+
                 }
-
-                listLock.DeactiveLock(index);
-
-                LlavesCapturadas += 1;
-                if(LlavesCapturadas >= LlavesTotales)
+                else
                 {
-                    ReInit();
-                    player.Winner();
-                    return;
+                    int index = 0;
+                    switch (secuenceKey.ListIndexPositionKey[temporalPosition])
+                    {
+                        case 2:index = 0;break;
+                        case 3:index = 1;break;
+                        case 4:index = 2;break;
+                        case 5:index = 3;break;
+                    }
+
+                    listLock.DeactiveLock(index);
+
+                    LlavesCapturadas += 1;
+                    if(LlavesCapturadas >= LlavesTotales)
+                    {
+                        Stoped = true;
+                        return;
+                    }
+                    ResetVectorOriginalPosition();
                 }
-                ResetVectorOriginalPosition();
             }
         }
-
     }
 
     public void ResetVectorOriginalPosition()

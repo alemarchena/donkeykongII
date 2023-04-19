@@ -1,7 +1,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
-using static IntentMovement;
+using static PlayerMovementIntent;
 
 [CreateAssetMenu( fileName = "Player Movement Map", menuName = "Items/Player movement Map")] 
 public class PlayerMovementMap : ScriptableObject

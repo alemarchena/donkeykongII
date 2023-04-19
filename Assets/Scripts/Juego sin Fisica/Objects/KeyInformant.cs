@@ -5,10 +5,12 @@ using UnityEngine;
 /// <summary>
 /// El informante reporta la posicion de la llave y el player al ControllerMovementKey
 /// </summary>
-public class InformantKey : MonoBehaviour
+public class KeyInformant : MonoBehaviour
 {
     ControllerCollisionPlayerKey cmk;
     Key key;
+    public bool KeyComplete { get; private set;}
+    public bool Stoped { get; private set; }
 
     [SerializeField] private int actualCounterX;
     [SerializeField] private int actualCounterY;
@@ -18,6 +20,8 @@ public class InformantKey : MonoBehaviour
         {
             cmk = FindObjectOfType<ControllerCollisionPlayerKey>();
             key = GetComponent<Key>();
+            ReInit();
+
         }
         catch
         {
@@ -26,10 +30,18 @@ public class InformantKey : MonoBehaviour
         }
     }
 
+  
     private void Start()
     {
         cmk.AddKey(key);
         GetPositionKey();
+    }
+
+    public void ReInit()
+    {
+        KeyComplete = false;
+        Stoped = false;
+        key.ReInit();
     }
 
     private void GetPositionKey()
@@ -40,14 +52,21 @@ public class InformantKey : MonoBehaviour
     }
     void Update()
     {
-        if ((key.CounterX != actualCounterX || key.CounterY != actualCounterY ) && key.LlavesCapturadas < key.LlavesTotales )
+        if(!Stoped)
         {
-            actualCounterX = key.CounterX;
-            actualCounterY = key.CounterY;
+            if ((key.CounterX != actualCounterX || key.CounterY != actualCounterY ) && key.LlavesCapturadas < key.LlavesTotales )
+            {
+                actualCounterX = key.CounterX;
+                actualCounterY = key.CounterY;
 
-            cmk.NewPositionKey(this.gameObject, actualCounterX, actualCounterY);
+                cmk.NewPositionKey(this.gameObject, actualCounterX, actualCounterY);
+            }
+
+            if(key.LlavesCapturadas >= key.LlavesTotales)
+            {
+                KeyComplete = true;
+                Stoped = true;
+            }
         }
     }
-
-   
 }

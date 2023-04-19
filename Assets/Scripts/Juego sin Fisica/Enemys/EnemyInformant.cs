@@ -5,15 +5,15 @@ using UnityEngine;
 /// La clase informant comunica al ControllerWinLose los contadores de movimiento en X e Y del objeto
 /// </summary>
 
-public class InformantMovementAutomaticWithCounter : MonoBehaviour
+public class EnemyInformant : MonoBehaviour
 {
-    private MovementAutomaticWithCounter movementAutomaticWithCounter;
+    private EnemyMovementAutomaticWithCounter movementAutomaticWithCounter;
     private int actualCounterX;
     private int actualCounterY;
 
     ControllerAddPointOrDead cwl;
 
-    private InformantMovementAutomaticWithCounter()
+    private EnemyInformant()
     {
 
     }
@@ -27,7 +27,7 @@ public class InformantMovementAutomaticWithCounter : MonoBehaviour
     {
         try
         {
-            movementAutomaticWithCounter = GetComponent<MovementAutomaticWithCounter>();
+            movementAutomaticWithCounter = GetComponent<EnemyMovementAutomaticWithCounter>();
             cwl.AddGameObject(this.gameObject, movementAutomaticWithCounter.CounterX, movementAutomaticWithCounter.CounterY);
         }catch
         {

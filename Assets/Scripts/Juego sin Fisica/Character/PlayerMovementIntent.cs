@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class IntentMovement : MonoBehaviour
+public class PlayerMovementIntent : MonoBehaviour
 {
     [SerializeField] PlayerMovementMap playerMovementMap;
 
@@ -18,7 +18,7 @@ public class IntentMovement : MonoBehaviour
     private int counterX;
     private int counterY;
     bool isJumping = false;
-    private Player player;
+    private PlayerInformant playerInformant;
 
     public int CounterX
     {
@@ -29,7 +29,7 @@ public class IntentMovement : MonoBehaviour
         get { return counterY;}
     }
 
-    IntentMovement()
+    PlayerMovementIntent()
     {
         _stepY = 0.6f;
         _stepX = 0.75f;
@@ -37,9 +37,8 @@ public class IntentMovement : MonoBehaviour
 
     private void Awake()
     {
-        player =FindObjectOfType<Player>();
+        playerInformant =FindObjectOfType<PlayerInformant>();
         canMove = true;
-        vectorOriginalPosition = transform.position;
         ResetCounter();
 
     }
@@ -67,11 +66,7 @@ public class IntentMovement : MonoBehaviour
         if (isJumping) //Es el caso de saltar y morir en el salto
         {
            StartCoroutine(SubirDeLaMuerte());
-        }else
-        {
-            player.Revived();
         }
-        
     }
     public void MovementNoControlled(Transform t, TipoMovimiento tm)
     {
@@ -114,7 +109,7 @@ public class IntentMovement : MonoBehaviour
     {
         try
         {
-            if(player.ItsAlive)
+            if(playerInformant.PlayerItsAlive)
             {
                 canMove = false;
                 switch (tm)
@@ -210,8 +205,8 @@ public class IntentMovement : MonoBehaviour
             if(!playerMovementMap)
                 Debug.LogError("No se encontró el mapa de movimientos sin física");
 
-            if (!player)
-                Debug.LogError("No se encontró el Player");
+            if (!playerInformant)
+                Debug.LogError("No se encontró el Player Informant");
         }
     }
 
@@ -234,6 +229,6 @@ public class IntentMovement : MonoBehaviour
         transform.position = new Vector3(transform.position.x, transform.position.y + _stepY);
         canMove = true;
         isJumping = false;
-        player.Revived();
+        //player.Revived();
     }
 }

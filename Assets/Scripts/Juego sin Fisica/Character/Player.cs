@@ -10,11 +10,10 @@ public class Player : MonoBehaviour
     public bool ItsAlive { get; private set; }
     public bool Win {get;private set;}
 
-    public void Winner()
+    public int InitialLife
     {
-        Win = true;
+        get { return initialLife; }
     }
-
     public int Life
     {
         get { return lifes; }
@@ -25,92 +24,13 @@ public class Player : MonoBehaviour
         get { return points; }
     }
 
-    [Space]
-    [Tooltip("Es el sprite que muestra la cantidad de vidas en el juego")]
-    [SerializeField] GameObject prefabSpritelife;
-    [Tooltip("Es el contenedor que tendra como hijo al sprite que muestra la cantidad de vidas en el juego")]
-    [SerializeField] Transform content;
-    private float stepPositionPrefab = 0.5f;
-    private List<GameObject> listGameObjectsPrefab = new();
-
-    private SpriteRenderer sp;
-    private void Awake()
+ 
+    public void ReInit()
     {
-        sp = GetComponent<SpriteRenderer>();
-    }
-
-    private void Start()
-    {
-        ResetLifes();
-    }
-    private void Update()
-    {
-        if(lifes<=0 && ItsAlive)
-        {
-            Died();
-        }
-    }
-
-    public void Died()
-    {
-        ItsAlive = false;
-        try
-        {
-            sp.enabled = false;
-        }
-        catch
-        {
-            Debug.LogError("Falta el componente SpriteRenderer del Player");
-        }
-    }
-
-    public void Play()
-    {
-        ResetLifes();
-        CreateUIlife();
-        Win = false;
+        lifes = initialLife;
         ItsAlive = true;
-        try
-        {
-            sp.enabled=true;
-        }
-        catch
-        {
-            Debug.LogError("Falta el componente SpriteRenderer del Player");
-        }
+        points = 0;
     }
-    public void Revived()
-    {
-        CreateUIlife();
-        if(lifes>0)
-        {
-            ItsAlive = true;
-            try
-            {
-               sp.enabled =true;
-            }
-            catch
-            {
-                Debug.LogError("Falta el componente SpriteRenderer del Player");
-            }
-        }
-    }
-
-    private void CreateUIlife()
-    {
-        foreach (GameObject go in listGameObjectsPrefab)
-        {
-            DestroyImmediate(go);
-        }
-        listGameObjectsPrefab.Clear();
-        for (int a = 1; a < Life; a++)
-        {
-            Vector3 newPosition = new Vector3(content.position.x + a * stepPositionPrefab, content.position.y, content.position.z);
-            GameObject gaob = Instantiate(prefabSpritelife, newPosition, Quaternion.identity, content) as GameObject;
-            listGameObjectsPrefab.Add(gaob);
-        }
-    }
-  
 
     public void DiscountLife()
     {
@@ -120,11 +40,4 @@ public class Player : MonoBehaviour
     {
         points+=1;
     }
-
-    public void ResetLifes()
-    {
-        lifes = initialLife;
-    }
-
-
 }

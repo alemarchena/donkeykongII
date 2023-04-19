@@ -15,12 +15,12 @@ public class Keyboard_Movement : MonoBehaviour
 
 
     Transform t;
-    IntentMovement m;
+    PlayerMovementIntent m;
 
     private void Awake()
     {
         t = GetComponent<Transform>();
-        m = GetComponent<IntentMovement>();
+        m = GetComponent<PlayerMovementIntent>();
     }
 
 
@@ -31,23 +31,23 @@ public class Keyboard_Movement : MonoBehaviour
         {
             if( Input.GetKeyDown( _up )  )
             {
-                m.Move(t,IntentMovement.TipoMovimiento.tup);
+                m.Move(t,PlayerMovementIntent.TipoMovimiento.tup);
             }
             if (Input.GetKeyDown(_down))
             {
-                m.Move(t, IntentMovement.TipoMovimiento.tdown);
+                m.Move(t, PlayerMovementIntent.TipoMovimiento.tdown);
             }
             if (Input.GetKeyDown(_left))
             {
-                m.Move(t, IntentMovement.TipoMovimiento.tleft);
+                m.Move(t, PlayerMovementIntent.TipoMovimiento.tleft);
             }
             if (Input.GetKeyDown(_right))
             {
-                m.Move(t, IntentMovement.TipoMovimiento.tright);
+                m.Move(t, PlayerMovementIntent.TipoMovimiento.tright);
             }
             if (Input.GetKeyDown(_jump))
             {
-                m.Move(t, IntentMovement.TipoMovimiento.tpush);
+                m.Move(t, PlayerMovementIntent.TipoMovimiento.tpush);
             }
         }
         catch  {
