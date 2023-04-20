@@ -54,5 +54,5 @@ public class Keyboard_Movement : MonoBehaviour
             Debug.LogError("Hay un error en el código");
         }
     }
-        
+       
 }

@@ -43,6 +43,6 @@ public class Buttons_Movement : MonoBehaviour
 
     public void Jump()
     {
-        m.Move(t, PlayerMovementIntent.TipoMovimiento.tpush);
+         m.Move(t, PlayerMovementIntent.TipoMovimiento.tpush);
     }
 }

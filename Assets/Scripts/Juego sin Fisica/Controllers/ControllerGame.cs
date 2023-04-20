@@ -5,33 +5,32 @@ using UnityEngine;
 
 public class ControllerGame : MonoBehaviour
 {
-    PlayerInformant playerInformant;
-    KeyInformant keyInformant;
+    [SerializeField] PlayerData playerData;
+    KeyOperator keyOperator;
+    private PlayerOperator playerOperator;
 
     public bool Winner { get; private set; }
     public bool Loser { get; private set; }
     public bool Playing { get; private set; } 
-    public int PlayerPoints { get; private set; }
-    public bool PlayerItsAlive { get; private set; }
-    public int PlayerLife { get; private set; }
-    public int PlayerInitialLife { get; private set; }
-
 
     private void Awake()
     {
         try
         {
+            keyOperator = FindObjectOfType<KeyOperator>();
+            playerOperator = FindObjectOfType<PlayerOperator>();
+
+            if (!playerData)
+                Debug.LogError("Falta el componente PlayerData");
+
+
             Playing = false;
-            keyInformant = FindObjectOfType<KeyInformant>();
-            playerInformant = FindObjectOfType<PlayerInformant>();
         }
         catch
         {
-            if (!keyInformant) Debug.LogError("Falta el componente KeyInformant");
-            if (!playerInformant) Debug.LogError("Falta el componente PlayerInformant");
-
+            if (!keyOperator) Debug.LogError("Falta el componente KeyInformant");
+            if (!playerOperator) Debug.LogError("Falta el componente PlayerInformant");
         }
-        GetDataInformantPlayer();
     }
 
 
@@ -39,46 +38,34 @@ public class ControllerGame : MonoBehaviour
     {
         Winner = false;
         Loser = false;
-        keyInformant.ReInit();
-        playerInformant.ReInit();
+        
+        keyOperator.ReInit();
+        playerOperator.ReInit();
+        playerData.ReInit();
         StartCoroutine(RetardPlaying());
     }
+
 
     IEnumerator RetardPlaying()
     {
         yield return new WaitForSeconds(0.3f);
         Playing = true;
-
     }
     private void Update()
     {
         if(Playing)
         {
-            if (keyInformant.KeyComplete)
+            if (keyOperator.KeyComplete)
             { 
                 Winner = true;
                 Playing = false;
             }
 
-            if (playerInformant.PlayerItsAlive == false )
+            if (playerData.Life<=0)
             {
                 Loser = true;
                 Playing = false;
             }
-
-            if (playerInformant.PlayerLife <= 0) { 
-                Playing = false;
-            }
-
-            GetDataInformantPlayer();
         }
-    }
-
-    private void GetDataInformantPlayer()
-    {
-        PlayerPoints = playerInformant.PlayerPoints;
-        PlayerLife = playerInformant.PlayerLife;
-        PlayerInitialLife = playerInformant.PlayerInitialLife;
-        PlayerItsAlive = playerInformant.PlayerItsAlive;
     }
 }

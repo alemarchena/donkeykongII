@@ -26,7 +26,9 @@ public class ControllerAddPointOrDead : MonoBehaviour
             new CharacterObject(objectRecept, objectRecept.name,counterX,counterY, objectRecept.GetInstanceID());
 
         characterObject.type = DetectTypeObject(objectRecept, characterObject);
+
         listCharacters.Add(characterObject);
+
     }
 
     /// <summary>
@@ -216,11 +218,11 @@ public class ControllerAddPointOrDead : MonoBehaviour
                 {
                     if(typeAction == TypeAction.DiscountLife)
                     {
-                        gameObject.GetComponent<PlayerInformant>().DeadNotification();
+                        gameObject.GetComponent<PlayerOperator>().DeadNotification();
                     }
                     else if (typeAction == TypeAction.AddPoint)
                     {
-                        gameObject.GetComponent<PlayerInformant>().WinPointNotification();
+                        gameObject.GetComponent<PlayerOperator>().WinPointNotification();
                     }
                 }
                 catch

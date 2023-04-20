@@ -7,11 +7,11 @@ using UnityEngine;
 
 public class EnemyInformant : MonoBehaviour
 {
-    private EnemyMovementAutomaticWithCounter movementAutomaticWithCounter;
+    private EnemyMovementAutomaticWithCounter eMAWC;
+    ControllerAddPointOrDead cAddDead;
+
     private int actualCounterX;
     private int actualCounterY;
-
-    ControllerAddPointOrDead cwl;
 
     private EnemyInformant()
     {
@@ -20,28 +20,30 @@ public class EnemyInformant : MonoBehaviour
 
     private void Awake()
     {
-        cwl = FindObjectOfType<ControllerAddPointOrDead>();
+        cAddDead = FindObjectOfType<ControllerAddPointOrDead>();
     }
   
     private void Start()
     {
         try
         {
-            movementAutomaticWithCounter = GetComponent<EnemyMovementAutomaticWithCounter>();
-            cwl.AddGameObject(this.gameObject, movementAutomaticWithCounter.CounterX, movementAutomaticWithCounter.CounterY);
+            eMAWC = GetComponent<EnemyMovementAutomaticWithCounter>();
+            cAddDead.AddGameObject(this.gameObject, eMAWC.CounterX, eMAWC.CounterY);
         }catch
         {
-            Debug.LogError("El objeto necesita contener la clase MovementAutomaticWithCounter para utilizar el informante");
+            if(!cAddDead)Debug.LogError("El objeto necesita contener la clase ControllerAddPointOrDead para utilizar el informante");
+
+            if (!eMAWC) Debug.LogError("El objeto necesita contener la clase EnemyMovementAutomaticWithCounter para utilizar el informante");
         }
     }
 
     private void Update()
     {
-        if (movementAutomaticWithCounter.CounterX != actualCounterX || movementAutomaticWithCounter.CounterY != actualCounterY)
+        if (eMAWC.CounterX != actualCounterX || eMAWC.CounterY != actualCounterY)
         {
-            actualCounterX = movementAutomaticWithCounter.CounterX;
-            actualCounterY = movementAutomaticWithCounter.CounterY;
-            cwl.NewPosition(this.gameObject, movementAutomaticWithCounter.CounterX,movementAutomaticWithCounter.CounterY);
+            actualCounterX = eMAWC.CounterX;
+            actualCounterY = eMAWC.CounterY;
+            cAddDead.NewPosition(this.gameObject, eMAWC.CounterX,eMAWC.CounterY);
         }
     }
 }

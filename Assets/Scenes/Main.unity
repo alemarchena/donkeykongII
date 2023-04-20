@@ -1204,7 +1204,10 @@ MonoBehaviour:
   textWinLose: {fileID: 1890108593}
   prefabSpritelife: {fileID: 3627833839493405720, guid: 0b0f4aabb21ee3a44abcca234b9de702, type: 3}
   spritePlayer: {fileID: 1373414366}
+  spriteKey: {fileID: 213781376}
+  spriteDonKeyKong: {fileID: 114205677}
   buttonPlay: {fileID: 1318927801}
+  playerData: {fileID: 11400000, guid: 6ff5f2c5fd0d4e1469a99b5b4b78fd07, type: 2}
   content: {fileID: 49101795}
 --- !u!4 &1023224333 stripped
 Transform:
@@ -1388,6 +1391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d419d59ed0fd1dc40a815f314126f9f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerData: {fileID: 11400000, guid: 6ff5f2c5fd0d4e1469a99b5b4b78fd07, type: 2}
 --- !u!1 &1239301519
 GameObject:
   m_ObjectHideFlags: 0
@@ -1669,7 +1673,7 @@ GameObject:
   - component: {fileID: 1373414360}
   - component: {fileID: 1373414368}
   - component: {fileID: 1373414363}
-  - component: {fileID: 1373414367}
+  - component: {fileID: 1373414369}
   m_Layer: 0
   m_Name: Junior
   m_TagString: Untagged
@@ -1716,9 +1720,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bb7f274c323afb44a766e26b1a05837, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actualCounterX: 0
-  actualCounterY: 0
-  player: {fileID: 1373414367}
+  playerData: {fileID: 11400000, guid: 6ff5f2c5fd0d4e1469a99b5b4b78fd07, type: 2}
   playerIntentMovement: {fileID: 1373414368}
 --- !u!114 &1373414365
 MonoBehaviour:
@@ -1789,21 +1791,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1373414367
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1324300148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aabc432e7b0ca6544a087142bfc59201, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lifes: 0
-  points: 0
-  initialLife: 3
 --- !u!114 &1373414368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1817,9 +1804,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerMovementMap: {fileID: 11400000, guid: 3cd2a9b37318ae649af836f66c3f8fdf, type: 2}
+  playerData: {fileID: 11400000, guid: 6ff5f2c5fd0d4e1469a99b5b4b78fd07, type: 2}
   originalCounterPositionX: 1
   originalCounterPositionY: 0
   vectorOriginalPosition: {x: -1.793, y: -2.599976, z: -0.07557413}
+--- !u!114 &1373414369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1324300148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c310705d55d396240a256b2f81c7d781, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1452317646
 GameObject:
   m_ObjectHideFlags: 0

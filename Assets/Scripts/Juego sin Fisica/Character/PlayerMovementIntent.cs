@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMovementIntent : MonoBehaviour
 {
     [SerializeField] PlayerMovementMap playerMovementMap;
-
+    [SerializeField] PlayerData playerData;
     public enum TipoMovimiento { tup, tdown, tleft, tright, tpush }
     public TipoMovimiento tipoMovimiento { get; set; }
 
@@ -17,8 +17,7 @@ public class PlayerMovementIntent : MonoBehaviour
 
     private int counterX;
     private int counterY;
-    bool isJumping = false;
-    private PlayerInformant playerInformant;
+    private PlayerOperator playerOperator;
 
     public int CounterX
     {
@@ -37,10 +36,9 @@ public class PlayerMovementIntent : MonoBehaviour
 
     private void Awake()
     {
-        playerInformant =FindObjectOfType<PlayerInformant>();
+        playerOperator =FindObjectOfType<PlayerOperator>();
         canMove = true;
         ResetCounter();
-
     }
 
     private void Start()
@@ -61,12 +59,6 @@ public class PlayerMovementIntent : MonoBehaviour
         ResetCounter();
         transform.position = vectorOriginalPosition;
         playerMovementMap.Reiniciar();
-        
-
-        if (isJumping) //Es el caso de saltar y morir en el salto
-        {
-           StartCoroutine(SubirDeLaMuerte());
-        }
     }
     public void MovementNoControlled(Transform t, TipoMovimiento tm)
     {
@@ -104,12 +96,11 @@ public class PlayerMovementIntent : MonoBehaviour
         }
     }
 
-
     public void Move(Transform t, TipoMovimiento tm)
     {
         try
         {
-            if(playerInformant.PlayerItsAlive)
+             if(playerData.Life>0)
             {
                 canMove = false;
                 switch (tm)
@@ -117,8 +108,6 @@ public class PlayerMovementIntent : MonoBehaviour
                     case TipoMovimiento.tup:
                         if (playerMovementMap.CheckMove(TipoMovimiento.tup, new Vector2(playerMovementMap.contadorX, playerMovementMap.contadorY)))
                         {
-                            isJumping = false;
-
                             counterY += 1;
                             playerMovementMap.contadorY = counterY;
                             if(playerMovementMap.cambioPantalla == true)
@@ -135,8 +124,6 @@ public class PlayerMovementIntent : MonoBehaviour
                     case TipoMovimiento.tdown:
                         if (playerMovementMap.CheckMove(TipoMovimiento.tdown, new Vector2(playerMovementMap.contadorX, playerMovementMap.contadorY)))
                         {
-                            isJumping = false;
-
                             counterY -= 1;
                             playerMovementMap.contadorY = counterY;
 
@@ -157,8 +144,6 @@ public class PlayerMovementIntent : MonoBehaviour
                     case TipoMovimiento.tleft:
                         if (playerMovementMap.CheckMove(TipoMovimiento.tleft, new Vector2(playerMovementMap.contadorX, playerMovementMap.contadorY)))
                         {
-                            isJumping = false;
-
                             counterX -= 1;
                             playerMovementMap.contadorX = counterX;
                             p = new Vector3(t.position.x - _stepX, t.position.y);
@@ -170,8 +155,6 @@ public class PlayerMovementIntent : MonoBehaviour
                     case TipoMovimiento.tright:
                         if (playerMovementMap.CheckMove(TipoMovimiento.tright, new Vector2(playerMovementMap.contadorX, playerMovementMap.contadorY)))
                         {
-                            isJumping = false;
-
                             counterX += 1;
                             playerMovementMap.contadorX = counterX;
                             p = new Vector3(t.position.x + _stepX, t.position.y);
@@ -182,8 +165,6 @@ public class PlayerMovementIntent : MonoBehaviour
                     case TipoMovimiento.tpush:
                         if (playerMovementMap.CheckMove(TipoMovimiento.tpush, new Vector2(playerMovementMap.contadorX, playerMovementMap.contadorY)))
                         {
-                            isJumping = true;
-
                             counterY += 1;
                             playerMovementMap.contadorY = counterY;
                             p = new Vector3(t.position.x, t.position.y + _stepY);
@@ -205,7 +186,7 @@ public class PlayerMovementIntent : MonoBehaviour
             if(!playerMovementMap)
                 Debug.LogError("No se encontró el mapa de movimientos sin física");
 
-            if (!playerInformant)
+            if (!playerOperator)
                 Debug.LogError("No se encontró el Player Informant");
         }
     }
@@ -213,22 +194,15 @@ public class PlayerMovementIntent : MonoBehaviour
     IEnumerator BajarDelSalto(Transform t)
     {
         yield return new WaitForSeconds(1f);
-        counterY -= 1;
-        playerMovementMap.contadorY = counterY;
-        p = new Vector3(t.position.x, t.position.y - _stepY);
-        t.position = p;
-        canMove = true;
 
-    }
+        if(transform.position != vectorOriginalPosition)
+        {
+            counterY -= 1;
+            playerMovementMap.contadorY = counterY;
+            p = new Vector3(t.position.x, t.position.y - _stepY);
+            t.position = p;
+            canMove = true;
+        }
 
-    IEnumerator SubirDeLaMuerte()
-    {
-        yield return new WaitForSeconds(1.1f);
-        counterY += 1;
-        playerMovementMap.contadorY = counterY;
-        transform.position = new Vector3(transform.position.x, transform.position.y + _stepY);
-        canMove = true;
-        isJumping = false;
-        //player.Revived();
     }
 }

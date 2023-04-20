@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ControllersUI : MonoBehaviour
+public class ControllerUI : MonoBehaviour
 {
 
     ControllerGame controllerGame;
@@ -16,7 +16,11 @@ public class ControllersUI : MonoBehaviour
     [Tooltip("Es el sprite que muestra la cantidad de vidas en el juego")]
     [SerializeField] GameObject prefabSpritelife;
     [SerializeField] SpriteRenderer spritePlayer;
+    [SerializeField] SpriteRenderer spriteKey;
+    [SerializeField] SpriteRenderer spriteDonKeyKong;
     [SerializeField] GameObject buttonPlay;
+    [SerializeField] PlayerData playerData;
+
     private bool stoped;
 
 
@@ -26,13 +30,35 @@ public class ControllersUI : MonoBehaviour
 
     private float stepPositionPrefab = 0.5f;
     private List<GameObject> listGameObjectsPrefab = new();
+
+    private KeyOperator keyOperator;
+    private Lock listLock;
+
+    
+
     private bool readyReInit;
 
 
     private void Awake()
     {
+        if (!playerData) Debug.LogError("Falta asociar el Player a èste objeto");
+
+        listLock = FindObjectOfType<Lock>();
+        if (!listLock) Debug.LogError("Falta asociar la clase Lock a èste objeto");
+
+        keyOperator = FindObjectOfType<KeyOperator>();
+        if (!keyOperator) Debug.LogError("Falta el componente KeyInformant");
+
+        if (!prefabSpritelife) Debug.LogError("Falta el componente Sprite para las vidas del player");
+        if (!spritePlayer) Debug.LogError("Falta el componente Sprite del player");
+        if (!spriteKey) Debug.LogError("Falta el componente Sprite de la llave");
+        if (!spriteDonKeyKong) Debug.LogError("Falta el componente Sprite de la DonKeyKong");
+        
         stoped = true;
         readyReInit = false;
+        ActivationSpritePlayer(false);
+
+
     }
     void Start()
     {
@@ -44,55 +70,75 @@ public class ControllersUI : MonoBehaviour
         if (controllerGame.Playing && readyReInit)
         {
             ActivationSpritePlayer(true);
+            ActivationSpriteKey(true);
+            ActivationSpriteDonKeyKong(true);
             stoped = false;
             readyReInit = false;
             actualPlayerLife = 0;
             textWinLose.text = "";
+            listLock.ActivateLocks();
         }
 
 
-        if (!controllerGame.Playing && stoped)
+        if (!controllerGame.Playing && stoped && !readyReInit)
             textWinLose.text = "Press Start";
 
+        if (controllerGame.Playing && playerData.Life <=0)
+            textWinLose.text = "You Lose";
 
-        if(controllerGame.Playing && !spritePlayer.enabled)
+        if (controllerGame.Playing && !spritePlayer.enabled)
             ActivationSpritePlayer(true);
 
-        if (actualPlayerLife != controllerGame.PlayerLife)
+        if (controllerGame.Playing)
         {
-            CreateUIlife();
+            if (actualPlayerLife != playerData.Life)
+            {
+                CreateUIlife();
+            }
+            actualPlayerLife = playerData.Life;
         }
-        actualPlayerLife = controllerGame.PlayerLife;
 
         if (controllerGame.Playing && stoped)
             stoped = false;
 
+        if (controllerGame.Loser)
+        {
+            textWinLose.text = "You Lose";
+            stoped = true;
+            readyReInit = true;
+            ActivationSpritePlayer(false);
+            ActivationSpriteKey(false);
+        }
 
         if (!stoped)
         {
             try
             {
-                textPoints.text = controllerGame.PlayerPoints.ToString();
+                textPoints.text = playerData.Points.ToString();
 
-
-                if (controllerGame.PlayerItsAlive && controllerGame.PlayerLife > 0)
+                if (playerData.Life > 0)
                     textWinLose.text = "";
 
-                if (!controllerGame.PlayerItsAlive && controllerGame.PlayerLife <= 0)
-                {
-                    textWinLose.text = "You Lose";
-                    stoped = true;
-                    readyReInit = true;
-                    ActivationSpritePlayer(false);
-                }
 
                 if (controllerGame.Winner)
                 {
                     textWinLose.text = "You Win";
                     readyReInit = true;
                     ActivationSpritePlayer(false);
+                    ActivationSpriteKey(false);
+                    ActivationSpriteDonKeyKong(false);
+
+
                 }
 
+                //Logica para desactivar candados en la UI
+                foreach (KeyValuePair<int, bool> pair in keyOperator.DictionaryKey)
+                {
+                    int key = pair.Key;
+                    bool value = pair.Value;
+                    if(value)
+                        listLock.DeactiveLock(key);
+                }
             }
             catch
             {
@@ -121,7 +167,15 @@ public class ControllersUI : MonoBehaviour
     {
         spritePlayer.enabled = state;
     }
+    private void ActivationSpriteKey(bool state)
+    {
+        spriteKey.enabled = state;
+    }
 
+    private void ActivationSpriteDonKeyKong(bool state)
+    {
+        spriteDonKeyKong.enabled = state;
+    }
 
     private void CreateUIlife()
     {
@@ -130,7 +184,7 @@ public class ControllersUI : MonoBehaviour
             DestroyImmediate(go);
         }
         listGameObjectsPrefab.Clear();
-        for (int a = 1; a < controllerGame.PlayerLife; a++)
+        for (int a = 1; a < playerData.Life; a++)
         {
             Vector3 newPosition = new Vector3(content.position.x + a * stepPositionPrefab, content.position.y, content.position.z);
             GameObject gaob = Instantiate(prefabSpritelife, newPosition, Quaternion.identity, content) as GameObject;

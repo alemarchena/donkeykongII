@@ -18,11 +18,16 @@ public class Key : MonoBehaviour
     private int temporalPosition = 1;
     private bool EstaEnCandado = false;
 
-    private Lock listLock;
+
+    private Dictionary<int, bool> dictionaryFreeKey = new();
+
+    public Dictionary<int, bool>  DictionaryFreeKey
+    {
+        get { return dictionaryFreeKey; }
+    }
 
     private void Awake()
     {
-        listLock = FindObjectOfType<Lock>();
         secuenceKey.GeneratePositionsKey();
     }
    
@@ -36,7 +41,13 @@ public class Key : MonoBehaviour
             LlavesTotales = secuenceKey.ListCounterPosition.Count - 2;
             ResetVectorOriginalPosition();
             secuenceKey.GeneratePositionsKey();
-            listLock.ActivateLocks();
+
+            dictionaryFreeKey.Clear();
+            dictionaryFreeKey.Add(0, false);
+            dictionaryFreeKey.Add(1, false);
+            dictionaryFreeKey.Add(2, false);
+            dictionaryFreeKey.Add(3, false);
+
             Stoped = false;
         }
         catch (Exception e)
@@ -79,16 +90,14 @@ public class Key : MonoBehaviour
                 }
                 else
                 {
-                    int index = 0;
                     switch (secuenceKey.ListIndexPositionKey[temporalPosition])
                     {
-                        case 2:index = 0;break;
-                        case 3:index = 1;break;
-                        case 4:index = 2;break;
-                        case 5:index = 3;break;
+                        case 2:dictionaryFreeKey[0] = true;break;
+                        case 3:dictionaryFreeKey[1] = true;break;
+                        case 4:dictionaryFreeKey[2] = true;break;
+                        case 5:dictionaryFreeKey[3] = true;break;
                     }
 
-                    listLock.DeactiveLock(index);
 
                     LlavesCapturadas += 1;
                     if(LlavesCapturadas >= LlavesTotales)

@@ -5,10 +5,12 @@ using UnityEngine;
 /// <summary>
 /// El informante reporta la posicion de la llave y el player al ControllerMovementKey
 /// </summary>
-public class KeyInformant : MonoBehaviour
+public class KeyOperator : MonoBehaviour
 {
-    ControllerCollisionPlayerKey cmk;
-    Key key;
+    private ControllerCollisionPlayerKey cmk;
+    private Key key;
+    public Dictionary<int, bool> DictionaryKey { get; private set; }
+
     public bool KeyComplete { get; private set;}
     public bool Stoped { get; private set; }
 
@@ -21,7 +23,7 @@ public class KeyInformant : MonoBehaviour
             cmk = FindObjectOfType<ControllerCollisionPlayerKey>();
             key = GetComponent<Key>();
             ReInit();
-
+            DictionaryKey = new();
         }
         catch
         {
@@ -66,7 +68,11 @@ public class KeyInformant : MonoBehaviour
             {
                 KeyComplete = true;
                 Stoped = true;
+            }else
+            {
+                DictionaryKey = key.DictionaryFreeKey;
             }
+
         }
     }
 }
