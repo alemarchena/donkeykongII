@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0c0bc8677612256428a5ccbaab357d2d
+guid: f25576d8eb74770408d681a499776c4f
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -20,11 +20,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -63,6 +64,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
   cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
@@ -141,85 +143,64 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: botones_comando normal_0
+      name: botones1_0
       rect:
         serializedVersion: 2
-        x: 98
-        y: 190
-        width: 74
-        height: 74
+        x: 142
+        y: 154
+        width: 1201
+        height: 1180
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4e16f808d43b4494fb77ce59500be703
-      internalID: -1290948617
+      spriteID: 27f5d33b4f53e4e4c93703524ceaa15d
+      internalID: -469530698
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: botones_comando normal_1
+      name: botones1_1
       rect:
         serializedVersion: 2
-        x: 9
-        y: 103
-        width: 75
-        height: 77
+        x: 1500
+        y: 145
+        width: 1162
+        height: 1187
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 308ce288eb3a77a448c950ee83201685
-      internalID: -585377803
+      spriteID: c98dde906c8605344a7371309c1a2152
+      internalID: -123349753
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: botones_comando normal_2
+      name: botones1_2
       rect:
         serializedVersion: 2
-        x: 186
-        y: 103
-        width: 72
-        height: 77
+        x: 2855
+        y: 145
+        width: 1176
+        height: 1187
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 63e4e24835177f846ab2cc0a6e9c1c59
-      internalID: -390984443
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: botones_comando normal_3
-      rect:
-        serializedVersion: 2
-        x: 98
-        y: 19
-        width: 74
-        height: 73
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5db4daf284b52694586b63c55ec064c9
-      internalID: -109335131
+      spriteID: 4eb265b60d43d594b89127ac5e5a9faf
+      internalID: -1673004394
       vertices: []
       indices: 
       edges: []
@@ -235,13 +216,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      botones_comando normal_3: -109335131
-      botones_comando normal_0: -1290948617
-      botones_comando normal_2: -390984443
-      botones_comando normal_1: -585377803
-  spritePackingTag: 
+      botones1_3: 278190599
+      botones1_2: -1673004394
+      botones1_1: -123349753
+      botones1_4: 2130765179
+      botones1_0: -469530698
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
