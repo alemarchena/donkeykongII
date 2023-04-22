@@ -7,6 +7,7 @@ public class ControllerGame : MonoBehaviour
 {
     [SerializeField] Configuration configuration;
     [SerializeField] PlayerData playerData;
+    ControllerSound controllerSound;
 
     public bool Winner { get; private set; }
     public bool Loser { get; private set; }
@@ -25,6 +26,9 @@ public class ControllerGame : MonoBehaviour
                 Debug.LogError("Falta el componente PlayerData");
 
             if (!configuration) Debug.LogError("Falta asignar el archivo Configuration");
+
+            controllerSound = FindObjectOfType<ControllerSound>();
+            if (!controllerSound) Debug.LogError("Falta el ControllerSound en el juego");
 
             Playing = false;
         }
@@ -67,6 +71,7 @@ public class ControllerGame : MonoBehaviour
 
             if (playerData.Life<=0)
             {
+                controllerSound.PlayDeadPlayer();
                 Loser = true;
                 Playing = false;
             }

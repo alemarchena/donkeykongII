@@ -12,6 +12,14 @@ public class ControllerSound : MonoBehaviour
     [SerializeField] AudioSource ASPlayer;
     [SerializeField] AudioSource ASKey;
     [SerializeField] AudioSource ASGeneral;
+    [Space]
+    [SerializeField] AudioClip ClipGetKey;
+    [SerializeField] AudioClip ClipCapturedKey;
+
+    [Space]
+    [SerializeField] AudioClip ClipJumpPlayer;
+    [SerializeField] AudioClip ClipLostLifePlayer;
+    [SerializeField] AudioClip ClipDeadPlayer;
 
     [SerializeField] float speedTimeSoundEnemy;
     private float counterTimerSoundEnemy = 0;
@@ -60,8 +68,32 @@ public class ControllerSound : MonoBehaviour
     }
 
     public void PlayPlayerJump() {
+        
+        ASPlayer.clip = ClipJumpPlayer;
         ASPlayer.Play();
     }
-    public void PlayKey() { }
+
+    public void PlayLostLifePlayer()
+    {
+        ASPlayer.clip = ClipLostLifePlayer;
+        ASPlayer.Play();
+    }
+
+    public void PlayDeadPlayer()
+    {
+        ASPlayer.clip = ClipDeadPlayer;
+        ASPlayer.Play();
+    }
+
+    public void PlayGetKey() {
+        ASKey.clip = ClipGetKey;
+        ASKey.Play();
+    }
+    public void PlayCapturedKey()
+    {
+        ASKey.clip = ClipCapturedKey;
+        ASKey.Play();
+    }
+
     public void PlayGeneral() { }
 }

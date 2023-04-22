@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Buttons_Movement : MonoBehaviour
 {
-    [SerializeField] ControllerSound controllerSound;
+    ControllerSound controllerSound;
     Transform t;
     PlayerMovementIntent m;
 
@@ -21,7 +21,8 @@ public class Buttons_Movement : MonoBehaviour
             return;
         }
 
-        if (!controllerSound) Debug.LogError("Falta asociar el controlador de sonido");
+        controllerSound = FindObjectOfType<ControllerSound>();
+        if (!controllerSound) Debug.LogError("Falta el ControllerSound en el juego");
     }
 
     public void Up()

@@ -6,7 +6,7 @@ using System;
 public class Keyboard_Movement : MonoBehaviour
 {
 
-    [SerializeField] ControllerSound controllerSound;
+    ControllerSound controllerSound;
 
     [SerializeField] KeyCode _up;
     [SerializeField] KeyCode _down;
@@ -24,7 +24,8 @@ public class Keyboard_Movement : MonoBehaviour
         t = GetComponent<Transform>();
         m = GetComponent<PlayerMovementIntent>();
 
-        if (!controllerSound) Debug.LogError("Falta asociar el controlador de sonido");
+        controllerSound = FindObjectOfType<ControllerSound>();
+        if (!controllerSound) Debug.LogError("Falta el ControllerSound en el juego");
 
     }
 

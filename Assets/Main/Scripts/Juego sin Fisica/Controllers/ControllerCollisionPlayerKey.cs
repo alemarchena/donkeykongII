@@ -8,6 +8,8 @@ using UnityEngine;
 /// </summary>
 public class ControllerCollisionPlayerKey : MonoBehaviour
 {
+    [SerializeField] private ControllerSound controllerSound;
+
     private int positionKeyX;
     private int positionKeyY;
     private int positionPlayerX;
@@ -15,6 +17,11 @@ public class ControllerCollisionPlayerKey : MonoBehaviour
     
     private Key Key;
     private bool okNotify=true;
+
+    private void Awake()
+    {
+        if (!controllerSound) Debug.LogError("Falta asociar el ControllerSound al objeto");
+    }
     public void AddKey(Key KeyObject)
     {
         Key = KeyObject;
@@ -38,6 +45,7 @@ public class ControllerCollisionPlayerKey : MonoBehaviour
     {
         if (okNotify && ( positionKeyX == positionPlayerX && positionKeyY == positionPlayerY) )
         {
+            controllerSound.PlayGetKey();
             okNotify = false;
             Key.SetNewPositionKey();
             StartCoroutine(RestartNotify());

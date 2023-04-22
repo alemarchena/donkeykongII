@@ -6,7 +6,9 @@ using UnityEngine;
 
 public class Key : MonoBehaviour
 {
+
     [SerializeField] private SecuenceKey secuenceKey;
+    private ControllerSound controllerSound;
 
     public int CounterX { get; private set; }
     public int CounterY { get; private set; }
@@ -29,8 +31,13 @@ public class Key : MonoBehaviour
     private void Awake()
     {
         secuenceKey.GeneratePositionsKey();
+
+        controllerSound = FindObjectOfType<ControllerSound>();
+        if (!controllerSound) Debug.LogError("Falta el ControllerSound en el juego");
+
+
     }
-   
+
     public void ReInit()
     {
         try
@@ -100,7 +107,9 @@ public class Key : MonoBehaviour
 
 
                     LlavesCapturadas += 1;
-                    if(LlavesCapturadas >= LlavesTotales)
+                    controllerSound.PlayCapturedKey();
+
+                    if (LlavesCapturadas >= LlavesTotales)
                     {
                         Stoped = true;
                         return;

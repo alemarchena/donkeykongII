@@ -8,8 +8,9 @@ using UnityEngine;
 public class PlayerOperator : MonoBehaviour
 {
     [SerializeField] private PlayerData playerData;
-    [SerializeField] private PlayerMovementIntent playerIntentMovement;
-    
+    private PlayerMovementIntent playerIntentMovement;
+    private ControllerSound controllerSound;
+
     private int actualCounterX;
     private int actualCounterY;
     private bool deadNotification=false;
@@ -32,6 +33,10 @@ public class PlayerOperator : MonoBehaviour
 
             playerIntentMovement = GetComponent<PlayerMovementIntent>();
             cAddDead.AddGameObject(this.gameObject, playerIntentMovement.CounterX, playerIntentMovement.CounterY);
+           
+            controllerSound = FindObjectOfType<ControllerSound>();
+
+            if (!controllerSound) Debug.LogError("Falta el ControllerSound en el juego");
 
             ReInit();
         }
@@ -70,6 +75,8 @@ public class PlayerOperator : MonoBehaviour
             }
             else
             {
+                controllerSound.PlayLostLifePlayer();
+
                 playerData.DiscountLife();
                 deadNotification = false;
                 playerIntentMovement.ResetVectorOriginalPosition();

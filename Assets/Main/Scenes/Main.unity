@@ -389,6 +389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1496e015357a845a98dfcfee0240f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controllerSound: {fileID: 554503526}
 --- !u!4 &136631089 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6471265789714413758, guid: 88bcf984bc3dde3479daece6b1714b12, type: 3}
@@ -441,6 +442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   secuenceKey: {fileID: 11400000, guid: 8916a13d3ddbad444b092bccdede1aca, type: 2}
+  controllerSound: {fileID: 554503526}
 --- !u!212 &213781376
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -633,8 +635,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 8300000, guid: a0b1a3c3f1393bb42ae90fe917d37660, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -863,7 +865,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 563f1a9f262425d48bcae477da3c654a, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.808
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1020,6 +1022,11 @@ MonoBehaviour:
   ASPlayer: {fileID: 1777473210}
   ASKey: {fileID: 364299741}
   ASGeneral: {fileID: 1578918042}
+  ClipGetKey: {fileID: 8300000, guid: a0b1a3c3f1393bb42ae90fe917d37660, type: 3}
+  ClipCapturedKey: {fileID: 8300000, guid: e15e9e2df87db2c4cab82fa41d402b25, type: 3}
+  ClipJumpPlayer: {fileID: 8300000, guid: 99ef0dca9a8d25a4c8d3c1dfc5da2ab5, type: 3}
+  ClipLostLifePlayer: {fileID: 8300000, guid: 6f3eb6fe364fa934ebe251f482fb2107, type: 3}
+  ClipDeadPlayer: {fileID: 8300000, guid: 31b2237b07cd819448adc93774cbb4da, type: 3}
   speedTimeSoundEnemy: 1.5
 --- !u!1 &572415413
 GameObject:
@@ -1824,6 +1831,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   configuration: {fileID: 11400000, guid: 3d2ae620623e8f34c8cf449383d2810b, type: 2}
   playerData: {fileID: 11400000, guid: 6ff5f2c5fd0d4e1469a99b5b4b78fd07, type: 2}
+  controllerSound: {fileID: 554503526}
 --- !u!1 &1239301519
 GameObject:
   m_ObjectHideFlags: 0
@@ -2154,6 +2162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: 6ff5f2c5fd0d4e1469a99b5b4b78fd07, type: 2}
   playerIntentMovement: {fileID: 0}
+  controllerSound: {fileID: 554503526}
 --- !u!114 &1373414365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2617,7 +2626,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 99ef0dca9a8d25a4c8d3c1dfc5da2ab5, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
