@@ -28,21 +28,25 @@ public class Buttons_Movement : MonoBehaviour
     public void Up()
     {
         m.Move(t,PlayerMovementIntent.TipoMovimiento.tup, out bool okMove);
+        if (okMove) controllerSound.PlayStepPlayer();
     }
 
     public void Down()
     {
         m.Move(t, PlayerMovementIntent.TipoMovimiento.tdown, out bool okMove);
+        if (okMove) controllerSound.PlayStepPlayer();
     }
 
     public void Left()
     {
         m.Move(t, PlayerMovementIntent.TipoMovimiento.tleft, out bool okMove);
+        if (okMove) controllerSound.PlayStepPlayer();
     }
 
     public void Right()
     {
         m.Move(t, PlayerMovementIntent.TipoMovimiento.tright, out bool okMove);
+        if (okMove) controllerSound.PlayStepPlayer();
     }
 
     public void Jump()

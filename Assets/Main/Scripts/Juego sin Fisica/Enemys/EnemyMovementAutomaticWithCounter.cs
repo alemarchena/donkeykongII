@@ -4,8 +4,9 @@ using UnityEngine;
 public class EnemyMovementAutomaticWithCounter : MonoBehaviour
 {
     [SerializeField] Configuration configuration;
-    public enum TypeMovementAutomatic { HorizontalBounce, HorizontalFromLeft, HorizontalFromRight }
+    public enum TypeMovementAutomatic { HorizontalBounce, HorizontalFromLeft, HorizontalFromRight, DownHorizontalBounce }
     public enum InitialPosition { Left, Right }
+    public enum ViewPosition { Left, Right }
 
     [SerializeField] TypeMovementAutomatic typeMovementRobot;
     [Tooltip("Establece la posicion inicial en pantalla del objeto")]
@@ -13,7 +14,8 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
     [Space]
 
     [Header("Displacement Quantity")]
-    [SerializeField] float _step=0.75f;
+    [SerializeField] float _stepX=0.75f;
+    [SerializeField] float _stepY=0.6f;
 
 
     [Tooltip("Establece el contador inicial en X del objeto")]
@@ -52,18 +54,22 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
     [Header("Horizontal Parameters")]
     [SerializeField] int _limitCounterRightX;
     [SerializeField] int _limitCounterLeftX;
-    [SerializeField] private bool canTeletransport;
+    [SerializeField] private bool canTeletransportX = false;
+
+    [Header("Vertical Parameters")]
+    [SerializeField] int _limitDownCounterY;
+    [SerializeField] private bool canTeletransportY=false;
+    int _initCounterY;
 
 
-    private bool movingToRight;
-    private bool LookAtRight;
+    private bool moveToRight;
     private SpriteRenderer sprite;
     private Transform t;
     private float counterTime;
     private bool canMove;
 
 
-    [SerializeField] private Vector3 positionStart;
+    private Vector3 positionStart;
     
 
     private void Awake()
@@ -73,11 +79,18 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
 
         sprite = GetComponent<SpriteRenderer>();
         ResetTime();
+        _initCounterY = counterY;
+
         ResetCounter();
 
         if (!configuration) Debug.LogError("Falta asignar el archivo Configuration");
-    }
 
+        if(initialPosition == InitialPosition.Left) 
+            moveToRight = true;
+        else 
+            moveToRight = false;
+
+    }
 
     private void ResetTime()
     {
@@ -94,6 +107,15 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
                 else
                     counterX = _limitCounterLeftX;
                 
+                break;
+            case TypeMovementAutomatic.DownHorizontalBounce:
+                if (initialPosition == InitialPosition.Right)
+                    counterX = _limitCounterRightX;
+                else
+                    counterX = _limitCounterLeftX;
+
+                counterY = _initCounterY;
+
                 break;
             case TypeMovementAutomatic.HorizontalFromLeft:
                 counterX = _limitCounterLeftX;
@@ -123,6 +145,9 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
                     case TypeMovementAutomatic.HorizontalBounce:
                         HorizontalBounceCounter();
                         break;
+                    case TypeMovementAutomatic.DownHorizontalBounce:
+                        DownHorizontalBounceCounter();
+                        break;
                     case TypeMovementAutomatic.HorizontalFromLeft:
                         HorizontalFromLeft();
                         break;
@@ -147,69 +172,110 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
     }
     private void HorizontalBounceCounter()
     {
+        Visibilidad();
 
         if (counterX >= _limitCounterRightX)
         {
-            MoveToLeft();
+            FinRightPosition();
             counterX = _limitCounterRightX;
         }
         else if (counterX <= _limitCounterLeftX)
         {
-            MoveToRight();
+            FinLeftPosition();
             counterX = _limitCounterLeftX;
         }
 
 
-        if (movingToRight)
+        if (moveToRight)
         {
-            t.position = new Vector3(t.position.x - _step, t.position.y, t.position.z);
+            t.position = new Vector3(t.position.x - _stepX, t.position.y, t.position.z);
             counterX -= 1;
         }
         else
         {
-            t.position = new Vector3(t.position.x + _step, t.position.y, t.position.z);
+            t.position = new Vector3(t.position.x + _stepX, t.position.y, t.position.z);
             counterX += 1;
         }
         Visibilidad();
+
     }
 
-    private void MoveToLeft()
+    private void DownHorizontalBounceCounter()
     {
-        movingToRight = true;
-        if (LookAtRight)
-        {
-            sprite.flipX = false;
-            LookAtRight = false;
-        }
-    }
+        Visibilidad();
 
-    private void MoveToRight()
+        if (counterX >= _limitCounterRightX)
+        {
+            FinRightPosition();
+            counterX = _limitCounterRightX;
+            t.position = new Vector3(t.position.x, t.position.y - _stepY, t.position.z);
+            counterY -= 1;
+        }
+        else if (counterX <= _limitCounterLeftX)
+        {
+            FinLeftPosition();
+            counterX = _limitCounterLeftX;
+            t.position = new Vector3(t.position.x , t.position.y - _stepY, t.position.z);
+            counterY -= 1;
+
+        }
+
+
+        if (moveToRight)
+        {
+
+            t.position = new Vector3(t.position.x - _stepX, t.position.y, t.position.z);
+            counterX -= 1;
+        }
+        else
+        {
+            t.position = new Vector3(t.position.x + _stepX, t.position.y, t.position.z);
+            counterX += 1;
+        }
+
+        if (canTeletransportY)
+        {
+            if (counterY < _limitDownCounterY)
+            {
+                transform.position = positionStart;
+                ResetCounter();
+            }
+        }
+        else
+        {
+            if (counterY < _limitDownCounterY)
+                canMove = false;
+        }
+
+        Visibilidad();
+    }
+    private void FinRightPosition()
     {
-        movingToRight = false;
-        sprite.flipX = true;
-        if (!LookAtRight)
-        {
-            LookAtRight = true;
-            sprite.flipX = true;
-        }
+        moveToRight = true;
+        sprite.flipX = !sprite.flipX;
     }
 
+    private void FinLeftPosition()
+    {
+        moveToRight = false;
+        sprite.flipX = !sprite.flipX;
+    }
 
     private void HorizontalFromLeft()
     {
         if (counterX <= _limitCounterLeftX)
         {
-            MoveToRight();
+            FinLeftPosition();
             counterX = _limitCounterLeftX;
         }
 
         if (counterX < _limitCounterRightX)
         {
-            t.position = new Vector3(t.position.x + _step, t.position.y, t.position.z);
+            t.position = new Vector3(t.position.x + _stepX, t.position.y, t.position.z);
             counterX += 1;
         }
         Visibilidad();
-        Teletransport();
+        TeletransportX();
 
     }
 
@@ -217,23 +283,23 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
     {
         if (counterX >= _limitCounterRightX)
         {
-            MoveToLeft();
+            FinRightPosition();
             counterX = _limitCounterRightX;
         }
 
         if (counterX > _limitCounterLeftX)
         {
-            t.position = new Vector3(t.position.x - _step, t.position.y, t.position.z);
+            t.position = new Vector3(t.position.x - _stepX, t.position.y, t.position.z);
             counterX -= 1;
         }
 
         Visibilidad();
-        Teletransport();
+        TeletransportX();
     }
 
-    private void Teletransport()
+    private void TeletransportX()
     {
-        if (canTeletransport && (counterX == _limitCounterLeftX || counterX == _limitCounterRightX))
+        if (canTeletransportX && (counterX == _limitCounterLeftX || counterX == _limitCounterRightX))
         {
             ResetCounter();
         }

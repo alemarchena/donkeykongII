@@ -38,18 +38,22 @@ public class Keyboard_Movement : MonoBehaviour
             if( Input.GetKeyDown( _up )  )
             {
                 m.Move(t,PlayerMovementIntent.TipoMovimiento.tup,out bool okMove);
+                if (okMove) controllerSound.PlayStepPlayer();
             }
             if (Input.GetKeyDown(_down))
             {
                 m.Move(t, PlayerMovementIntent.TipoMovimiento.tdown, out bool okMove);
+                if (okMove) controllerSound.PlayStepPlayer();
             }
             if (Input.GetKeyDown(_left))
             {
                 m.Move(t, PlayerMovementIntent.TipoMovimiento.tleft, out bool okMove);
+                if (okMove) controllerSound.PlayStepPlayer();
             }
             if (Input.GetKeyDown(_right))
             {
                 m.Move(t, PlayerMovementIntent.TipoMovimiento.tright, out bool okMove);
+                if (okMove) controllerSound.PlayStepPlayer();
             }
             if (Input.GetKeyDown(_jump))
             {

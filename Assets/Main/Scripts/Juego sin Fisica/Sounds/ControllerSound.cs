@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Graphs;
+//using UnityEditor.Graphs;
 using UnityEngine;
 
 public class ControllerSound : MonoBehaviour
@@ -17,6 +17,7 @@ public class ControllerSound : MonoBehaviour
     [SerializeField] AudioClip ClipCapturedKey;
 
     [Space]
+    [SerializeField] AudioClip ClipStepPlayer;
     [SerializeField] AudioClip ClipJumpPlayer;
     [SerializeField] AudioClip ClipLostLifePlayer;
     [SerializeField] AudioClip ClipDeadPlayer;
@@ -67,6 +68,11 @@ public class ControllerSound : MonoBehaviour
         ASEnemys.Play(); 
     }
 
+    public void PlayStepPlayer()
+    {
+        ASPlayer.clip = ClipStepPlayer;
+        ASPlayer.Play();
+    }
     public void PlayPlayerJump() {
         
         ASPlayer.clip = ClipJumpPlayer;
