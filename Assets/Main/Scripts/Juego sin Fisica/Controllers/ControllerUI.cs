@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ControllerUI : MonoBehaviour
 {
     ControllerGame controllerGame;
+    ControllerKeyPoint controllerKeyPoint;
 
     [Tooltip("Es el objeto de tipo Text ubicado en el canvas del juego para mostrar los puntos")]
     [SerializeField] Text textPoints;
@@ -29,7 +31,6 @@ public class ControllerUI : MonoBehaviour
 
     [Tooltip("Es el contenedor que tendra como hijo al sprite que muestra la cantidad de vidas en el juego")]
     [SerializeField] Transform content;
-    private int actualPlayerLife;
 
     private float stepPositionPrefab = 0.5f;
     private List<GameObject> listGameObjectsPrefab = new();
@@ -37,14 +38,13 @@ public class ControllerUI : MonoBehaviour
     private KeyOperator keyOperator;
     private Lock listLock;
 
-    
-
-    private bool readyReInit;
-
-
     private void Awake()
     {
         if (!playerData) Debug.LogError("Falta asociar el Player a èste objeto");
+
+        controllerKeyPoint = FindObjectOfType<ControllerKeyPoint>();
+        if (!controllerKeyPoint) Debug.LogError("Falta la clase ControllerKeyPoint en el juego");
+
 
         listLock = FindObjectOfType<Lock>();
         if (!listLock) Debug.LogError("Falta asociar la clase Lock a èste objeto");
@@ -58,7 +58,6 @@ public class ControllerUI : MonoBehaviour
         if (!spriteDonKeyKong) Debug.LogError("Falta el componente Sprite de la DonKeyKong");
         
         stoped = true;
-        readyReInit = false;
         ActivationSpritePlayer(false);
         ActivationSpriteDonKeyKongFree(false);
         ActivationSpriteDonKeyKongWinner(false);
@@ -67,124 +66,130 @@ public class ControllerUI : MonoBehaviour
     void Start()
     {
         controllerGame= FindObjectOfType<ControllerGame>();
+        if (!controllerGame)Debug.LogError("El componente ControllerGame no se encuentra en el juego");
+        if (!textPoints)Debug.LogError("El componente de Texto para mostrar el puntaje no se encuentra en el juego");
     }
 
+    public void ReInit()
+    {
+        stoped = false;
+        textWinLose.text = "";
+        
+        ActivationSpriteDonKeyKongFree(false);
+        ActivationSpriteDonKeyKongWinner(false);
+        CreateUIlife();
+        StartCoroutine(WaitWinner());
+        StartCoroutine(WaitLoser());
+        StartCoroutine(WaitPlaying());
+        StartCoroutine(DelayActivaLocks());
+        StartCoroutine(DelayDisplayCharacters());
+    }
+
+    IEnumerator DelayActivaLocks()
+    {
+        yield return new WaitForSeconds(3f);
+        listLock.ActivateLocks();
+    }
+
+    IEnumerator DelayDisplayCharacters()
+    {
+        yield return new WaitForSeconds(1.2f);
+        ActivationSpritePlayer(true);
+        ActivationSpriteKey(true);
+        ActivationSpriteDonKeyKong(true);
+    }
     void Update()
     {
-        if (controllerGame.Playing && readyReInit)
-        {
-            ActivationSpritePlayer(true);
-            ActivationSpriteKey(true);
-            ActivationSpriteDonKeyKong(true);
-            stoped = false;
-            readyReInit = false;
-            actualPlayerLife = 0;
-            textWinLose.text = "";
-            listLock.ActivateLocks();
-            ActivationSpriteDonKeyKongFree(false);
-            ActivationSpriteDonKeyKongWinner(false);
-        }
-
-
-        if (!controllerGame.Playing && stoped && !readyReInit)
+        if (!controllerGame.Playing && stoped && !controllerGame.ReStart)
             textWinLose.text = "Press Start";
 
-        if (controllerGame.Playing && playerData.Life <=0)
-            textWinLose.text = "You Lose";
 
-        if (controllerGame.Playing && !spritePlayer.enabled)
-            ActivationSpritePlayer(true);
-
-        if (controllerGame.Playing)
-        {
-            if (actualPlayerLife != playerData.Life)
-            {
-                CreateUIlife();
-            }
-            actualPlayerLife = playerData.Life;
-        }
-
+        
         if (controllerGame.Playing && stoped)
             stoped = false;
 
-        if (controllerGame.Loser)
+
+        if (controllerKeyPoint.IsAddingPoint)
         {
-            textWinLose.text = "You Lose";
-            stoped = true;
-            readyReInit = true;
-            ActivationSpritePlayer(false);
-            ActivationSpriteKey(false);
-        }
-
-        if (!stoped)
-        {
-            try
-            {
-                textPoints.text = playerData.Points.ToString();
-
-                if (playerData.Life > 0)
-                    textWinLose.text = "";
-
-
-                if (controllerGame.Winner)
-                {
-                    textWinLose.text = "You Win";
-                    readyReInit = true;
-                    ActivationSpritePlayer(false);
-                    ActivationSpriteKey(false);
-                    ActivationSpriteDonKeyKong(false);
-                    StartCoroutine(UIShowWinner());
-                    stoped = true;
-                }
-
-                //Logica para desactivar candados en la UI
-                foreach (KeyValuePair<int, bool> pair in keyOperator.DictionaryKey)
-                {
-                    int key = pair.Key;
-                    bool value = pair.Value;
-                    if(value)
-                        listLock.DeactiveLock(key);
-                }
-            }
-            catch
-            {
-                if(!controllerGame)
-                    Debug.LogError("El componente ControllerGame no se encuentra en el juego");
-
-                if (!textPoints)
-                    Debug.LogError("El componente de Texto para mostrar el puntaje no se encuentra en el juego");
-            }
-        }
-
-        if (controllerGame.Playing)
-        {
-            if(buttonPlay.activeSelf)
-                buttonPlay.SetActive(false);
-        }
-        else
-        {
-            if (!buttonPlay.activeSelf)
-                buttonPlay.SetActive(true);
+            textPoints.text = playerData.Points.ToString();
+            if (playerData.Life > 0) textWinLose.text = "";
         }
     }
 
+    IEnumerator WaitPlaying()
+    {
+        yield return new WaitUntil(HasPlaying);
+
+        if(!spritePlayer.enabled)ActivationSpritePlayer(true);
+        if (buttonPlay.activeSelf) buttonPlay.SetActive(false);
+        
+
+    }
+
+    private bool HasPlaying()
+    {
+        return controllerGame.Playing;
+    }
+
+    IEnumerator WaitLoser()
+    {
+        yield return new WaitUntil(HasLoser);
+        buttonPlay.SetActive(true);
+        textWinLose.text = "You Lose";
+        ActivationSpritePlayer(false);
+        ActivationSpriteKey(false);
+    }
+    private bool HasLoser()
+    {
+        return controllerGame.Loser;
+    }
+
+    IEnumerator WaitWinner()
+    {
+        yield return new WaitUntil(HasWinner);
+        if (controllerGame.Winner)
+        {
+            textWinLose.text = "You Win";
+            ActivationSpritePlayer(false);
+            ActivationSpriteKey(false);
+            ActivationSpriteDonKeyKong(false);
+            StartCoroutine(UIShowWinner(true));
+            stoped = true;
+            StartCoroutine(UIShowWinner(false));
+            StartCoroutine(WaitWinner());
+        }
+    }
+    private bool HasWinner()
+    {
+        return controllerGame.Winner;
+    }
+
+    public void CheckLock()
+    {
+        //Logica para desactivar candados en la UI
+        foreach (KeyValuePair<int, bool> pair in keyOperator.DictionaryKey)
+        {
+            int key = pair.Key;
+            bool value = pair.Value;
+            if (value)
+                listLock.DeactiveLock(key);
+        }
+    }
 
     private void ActivationSpritePlayer(bool state)
     {
         spritePlayer.enabled = state;
     }
-
     private void ActivationSpriteKey(bool state)
     {
         spriteKey.enabled = state;
     }
-
     private void ActivationSpriteDonKeyKong(bool state)
     {
         spriteDonKeyKong.enabled = state;
     }
 
-    private void CreateUIlife()
+    public void CreateUIlife()
     {
         foreach (GameObject go in listGameObjectsPrefab)
         {
@@ -207,11 +212,20 @@ public class ControllerUI : MonoBehaviour
     {
         spriteDonKeyKongwinner.enabled = state;
     }
-    IEnumerator UIShowWinner()
+    IEnumerator UIShowWinner(bool state)
     {
-        ActivationSpriteDonKeyKongFree(true);
-        yield return new WaitForSeconds(1f);
-        ActivationSpriteDonKeyKongFree(false);
-        ActivationSpriteDonKeyKongWinner(true);
+        if(state)
+        {
+            ActivationSpriteDonKeyKongFree(true);
+            yield return new WaitForSeconds(2f);
+            ActivationSpriteDonKeyKongFree(false);
+            ActivationSpriteDonKeyKongWinner(true);
+        }
+        else
+        {
+            yield return new WaitForSeconds(4f);
+            ActivationSpriteDonKeyKongFree(false);
+            ActivationSpriteDonKeyKongWinner(false);
+        }
     }
 }

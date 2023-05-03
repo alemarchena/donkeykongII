@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class Key : MonoBehaviour
 
     [SerializeField] private SecuenceKey secuenceKey;
     private ControllerSound controllerSound;
+    private ControllerKeyPoint controllerKeyPoint;
+    private ControllerUI controllerUI;
 
     public int CounterX { get; private set; }
     public int CounterY { get; private set; }
@@ -33,7 +36,12 @@ public class Key : MonoBehaviour
         secuenceKey.GeneratePositionsKey();
 
         controllerSound = FindObjectOfType<ControllerSound>();
+        controllerKeyPoint = FindObjectOfType<ControllerKeyPoint>();
+        controllerUI  = FindObjectOfType<ControllerUI>();
+
         if (!controllerSound) Debug.LogError("Falta el ControllerSound en el juego");
+        if (!controllerKeyPoint) Debug.LogError("Falta el ControllerKeyPoint en el juego");
+        if (!controllerUI) Debug.LogError("Falta el ControllerUI en el juego");
 
 
     }
@@ -78,13 +86,12 @@ public class Key : MonoBehaviour
                 CounterX = (int)vector.x;
                 CounterY = (int)vector.y;
                 EstaEnCandado = false;
-
+                controllerKeyPoint.CapturedKey();
             }
             else
             {
                 if(!EstaEnCandado)
                 {
-
                     temporalPosition += 1;
 
                     transform.position = secuenceKey.UIListTransformKey[secuenceKey.ListIndexPositionKey[temporalPosition]];
@@ -93,7 +100,7 @@ public class Key : MonoBehaviour
                     CounterX = (int)vector.x;
                     CounterY = (int)vector.y;
                     EstaEnCandado = true;
-
+                    controllerKeyPoint.CapturedKey();
                 }
                 else
                 {
@@ -107,18 +114,23 @@ public class Key : MonoBehaviour
 
 
                     LlavesCapturadas += 1;
+                    controllerKeyPoint.OpenLock();
                     controllerSound.PlayCapturedKey();
+                    controllerUI.CheckLock();
 
                     if (LlavesCapturadas >= LlavesTotales)
                     {
                         Stoped = true;
                         return;
+                    }else
+                    {
                     }
                     ResetVectorOriginalPosition();
                 }
             }
         }
     }
+
 
     public void ResetVectorOriginalPosition()
     {

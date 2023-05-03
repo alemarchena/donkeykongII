@@ -1,4 +1,4 @@
-using System;
+
 using UnityEngine;
 
 /// <summary>
@@ -10,6 +10,7 @@ public class PlayerOperator : MonoBehaviour
     [SerializeField] private PlayerData playerData;
     private PlayerMovementIntent playerIntentMovement;
     private ControllerSound controllerSound;
+    private ControllerUI controllerUI;
 
     private int actualCounterX;
     private int actualCounterY;
@@ -17,17 +18,14 @@ public class PlayerOperator : MonoBehaviour
     private bool winPointNotification=false;
     private ControllerAddPointOrDead cAddDead;
     private ControllerCollisionPlayerKey controllerMovementKey;
-
-    private PlayerOperator()
-    {
-
-    }
-
+    private PlayerOperator(){}
     private void Awake()
     {
         try
         {
             cAddDead = FindObjectOfType<ControllerAddPointOrDead>();
+            controllerUI = FindObjectOfType<ControllerUI>();
+
             controllerMovementKey = FindObjectOfType<ControllerCollisionPlayerKey>();
             if(!playerData) Debug.LogError("Falta asociar el Player a èste objeto");
 
@@ -48,7 +46,6 @@ public class PlayerOperator : MonoBehaviour
         }
     }
 
-
     public void ReInit()
     {
         playerIntentMovement.ResetVectorOriginalPosition();
@@ -56,33 +53,30 @@ public class PlayerOperator : MonoBehaviour
 
     private void Update()
     {
+        if (winPointNotification) { 
+            playerData.AddPoint();
+            winPointNotification = false;
+        }
 
-            if (winPointNotification) { 
-                playerData.AddPoint();
-                winPointNotification = false;
-            }
-
-            if(!deadNotification)
+        if(!deadNotification)
+        {
+            if (playerIntentMovement.CounterX != actualCounterX || playerIntentMovement.CounterY != actualCounterY)
             {
-                if (playerIntentMovement.CounterX != actualCounterX || playerIntentMovement.CounterY != actualCounterY)
-                {
-                    actualCounterX = playerIntentMovement.CounterX;
-                    actualCounterY = playerIntentMovement.CounterY;
+                actualCounterX = playerIntentMovement.CounterX;
+                actualCounterY = playerIntentMovement.CounterY;
 
-                    cAddDead.NewPosition(this.gameObject, actualCounterX, actualCounterY);
-                    controllerMovementKey.NewPositionPlayer(this.gameObject, actualCounterX, actualCounterY);
-                }
+                cAddDead.NewPosition(this.gameObject, actualCounterX, actualCounterY);
+                controllerMovementKey.NewPositionPlayer(this.gameObject, actualCounterX, actualCounterY);
             }
-            else
-            {
-                controllerSound.PlayLostLifePlayer();
-
-                playerData.DiscountLife();
-                deadNotification = false;
-                playerIntentMovement.ResetVectorOriginalPosition();
-            }
-
-           
+        }
+        else
+        {
+            deadNotification = false;
+            controllerSound.PlayLostLifePlayer();
+            playerData.DiscountLife();
+            controllerUI.CreateUIlife();
+            playerIntentMovement.ResetVectorOriginalPosition();
+        }
     }
 
     public void DeadNotification()

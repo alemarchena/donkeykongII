@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// El informante reporta la posicion de la llave y el player al ControllerMovementKey
+/// El Operador reporta la posicion de la llave y el player al ControllerMovementKey
 /// </summary>
 public class KeyOperator : MonoBehaviour
 {

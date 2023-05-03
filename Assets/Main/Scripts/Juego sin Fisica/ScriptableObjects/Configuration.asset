@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Configuration
   m_EditorClassIdentifier: 
   velocityEnemies: 1.5
+  incrementVelocityEnemies: 0.2

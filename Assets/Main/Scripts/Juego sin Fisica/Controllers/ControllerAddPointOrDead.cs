@@ -91,7 +91,7 @@ public class ControllerAddPointOrDead : MonoBehaviour
 
     IEnumerator RetardInform()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0f);
         VerifiyCollision();
 
     }
@@ -118,17 +118,21 @@ public class ControllerAddPointOrDead : MonoBehaviour
                     }
                     else
                     {
-                        objetoPlayer = listCharacters[b];
-                        objetoEnemy = listCharacters[a];
+                        if (listCharacters[b].type == CharacterObject.Type.Player)
+                        {
+                            objetoPlayer = listCharacters[b];
+                            objetoEnemy = listCharacters[a];
+                        }
+                        else
+                            return;
                     }
 
 
                     if (listCharacters[a].posY == listCharacters[b].posY)
                     {
-                        if (listCharacters[a].type == CharacterObject.Type.Player || listCharacters[b].type == CharacterObject.Type.Player && canDiscountLife)
+                        if (listCharacters[a].type == CharacterObject.Type.Player || listCharacters[b].type == CharacterObject.Type.Player)
                         {
-                            canDiscountLife = false;
-                            StartCoroutine(RecoverCanDiscountLife());
+                            
                             ActionsInPlayer(objetoPlayer.objectId,TypeAction.DiscountLife);
                             return;
                         }
@@ -216,8 +220,12 @@ public class ControllerAddPointOrDead : MonoBehaviour
             {
                 try
                 {
-                    if(typeAction == TypeAction.DiscountLife)
+                    if(typeAction == TypeAction.DiscountLife && canDiscountLife)
                     {
+                        canDiscountLife = false;
+
+                        StartCoroutine(RecoverCanDiscountLife());
+
                         gameObject.GetComponent<PlayerOperator>().DeadNotification();
                     }
                     else if (typeAction == TypeAction.AddPoint)
@@ -236,7 +244,7 @@ public class ControllerAddPointOrDead : MonoBehaviour
 
     IEnumerator RecoverCanDiscountLife()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         canDiscountLife = true;
     }
 }

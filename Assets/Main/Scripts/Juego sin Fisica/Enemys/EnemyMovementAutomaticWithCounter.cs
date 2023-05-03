@@ -1,15 +1,21 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class EnemyMovementAutomaticWithCounter : MonoBehaviour
 {
+    ControllerGame controllerGame;
+
     [SerializeField] Configuration configuration;
     public enum TypeMovementAutomatic { HorizontalBounce, HorizontalFromLeft, HorizontalFromRight, DownHorizontalBounce }
     public enum InitialPosition { Left, Right }
     public enum ViewPosition { Left, Right }
 
+    [Tooltip("It Wait a time for initialize")]
+    [SerializeField] float startTimeDelayInSeconds;
+    [Space]
     [SerializeField] TypeMovementAutomatic typeMovementRobot;
-    [Tooltip("Establece la posicion inicial en pantalla del objeto")]
+    [Tooltip("Set the start position object in the screen ")]
     [SerializeField] InitialPosition initialPosition;
     [Space]
 
@@ -70,15 +76,17 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
 
 
     private Vector3 positionStart;
-    
-
+    private float counterDelayTime=0;
+    private bool okStart=false;
     private void Awake()
     {
+        controllerGame = FindObjectOfType<ControllerGame>();
+        if (!controllerGame) Debug.LogError("Falta ControllerGame en el juego");
+
         t = GetComponent<Transform>();
         positionStart = t.position;
-
-        sprite = GetComponent<SpriteRenderer>();
         ResetTime();
+        sprite = GetComponent<SpriteRenderer>();
         _initCounterY = counterY;
 
         ResetCounter();
@@ -91,7 +99,7 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
             moveToRight = false;
 
     }
-
+    
     private void ResetTime()
     {
         counterTime = 0;
@@ -129,37 +137,51 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
         Visibilidad();
     }
     
+
     private void Update()
     {
-        counterTime += configuration.VelocityEnemies * Time.deltaTime;
-        if(counterTime > 1)
+
+        if (controllerGame.Playing)
         {
-            ResetTime();
-        }
-        if(canMove)
-        {
-            try
+            if (counterDelayTime <= startTimeDelayInSeconds && !okStart)
+                counterDelayTime += Time.deltaTime;
+
+            if(counterDelayTime > startTimeDelayInSeconds && !okStart)
+                okStart = true;
+
+            counterTime += configuration.VelocityEnemies * Time.deltaTime;
+            if(counterTime > 1)
+                ResetTime();
+
+            if(okStart)
             {
-                switch (typeMovementRobot)
+                if (canMove)
                 {
-                    case TypeMovementAutomatic.HorizontalBounce:
-                        HorizontalBounceCounter();
-                        break;
-                    case TypeMovementAutomatic.DownHorizontalBounce:
-                        DownHorizontalBounceCounter();
-                        break;
-                    case TypeMovementAutomatic.HorizontalFromLeft:
-                        HorizontalFromLeft();
-                        break;
-                    case TypeMovementAutomatic.HorizontalFromRight:
-                        HorizontalFromRight();
-                        break;
+                    try
+                    {
+                        switch (typeMovementRobot)
+                        {
+                            case TypeMovementAutomatic.HorizontalBounce:
+                                HorizontalBounceCounter();
+                                break;
+                            case TypeMovementAutomatic.DownHorizontalBounce:
+                                DownHorizontalBounceCounter();
+                                break;
+                            case TypeMovementAutomatic.HorizontalFromLeft:
+                                HorizontalFromLeft();
+                                break;
+                            case TypeMovementAutomatic.HorizontalFromRight:
+                                HorizontalFromRight();
+                                break;
+                        }
+                    }catch
+                    {
+                        Debug.LogError("No se ha encontrado el componente Transform en el objeto actual");
+                    }
+                    canMove = false;
                 }
-            }catch
-            {
-                Debug.LogError("No se ha encontrado el componente Transform en el objeto actual");
             }
-            canMove = false;
+
         }
     }
 

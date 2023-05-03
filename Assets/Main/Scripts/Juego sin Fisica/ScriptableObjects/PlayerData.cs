@@ -29,6 +29,10 @@ public class PlayerData : ScriptableObject
         points = 0;
     }
 
+    public void ReStart()
+    {
+        lifes = initialLife;
+    }
     public void DiscountLife()
     {
          lifes -= 1;

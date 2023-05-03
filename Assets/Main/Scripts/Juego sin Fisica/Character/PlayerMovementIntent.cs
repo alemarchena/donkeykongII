@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class PlayerMovementIntent : MonoBehaviour
 {
+    ControllerGame controllerGame;
     [SerializeField] PlayerMovementMap playerMovementMap;
     [SerializeField] PlayerData playerData;
     public enum TipoMovimiento { tup, tdown, tleft, tright, tpush }
     public TipoMovimiento tipoMovimiento { get; set; }
 
     private Vector3 p;
-    private bool canMove;
+    private bool canMove=false;
     [SerializeField] int originalCounterPositionX = 1;
     [SerializeField] int originalCounterPositionY = 0;
     [SerializeField] private Vector3 vectorOriginalPosition;
@@ -36,9 +37,11 @@ public class PlayerMovementIntent : MonoBehaviour
 
     private void Awake()
     {
+        controllerGame =FindObjectOfType<ControllerGame>();
         playerOperator =FindObjectOfType<PlayerOperator>();
-        canMove = true;
         ResetCounter();
+
+        if (!controllerGame) Debug.LogError("Falta ControllerGame en el juego");
     }
 
     private void Start()
@@ -99,9 +102,10 @@ public class PlayerMovementIntent : MonoBehaviour
     public void Move(Transform t, TipoMovimiento tm, out bool okMove)
     {
         okMove = false;
+        
         try
         {
-             if(playerData.Life>0)
+            if(controllerGame.Playing)
             {
                 canMove = false;
                 switch (tm)
@@ -190,6 +194,7 @@ public class PlayerMovementIntent : MonoBehaviour
                         break;
                 }
             }
+
         }
         catch
         {
