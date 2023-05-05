@@ -124,7 +124,10 @@ public class ControllerAddPointOrDead : MonoBehaviour
                             objetoEnemy = listCharacters[a];
                         }
                         else
-                            return;
+                        {
+                            objetoPlayer = new CharacterObject();
+                            objetoEnemy = new CharacterObject();
+                        }
                     }
 
 
@@ -132,8 +135,8 @@ public class ControllerAddPointOrDead : MonoBehaviour
                     {
                         if (listCharacters[a].type == CharacterObject.Type.Player || listCharacters[b].type == CharacterObject.Type.Player)
                         {
-                            
-                            ActionsInPlayer(objetoPlayer.objectId,TypeAction.DiscountLife);
+                            if(objetoPlayer.objectId != -1)
+                                ActionsInPlayer(objetoPlayer.objectId,TypeAction.DiscountLife);
                             return;
                         }
                     } else
@@ -155,7 +158,7 @@ public class ControllerAddPointOrDead : MonoBehaviour
                                 }
                                 if(canAddPoint)
                                 {
-                                    if(QueryIfGivePointEnemy(objetoEnemy.objectId))
+                                    if(QueryIfGivePointEnemy(objetoEnemy.objectId) && objetoPlayer.objectId!=-1)
                                         ActionsInPlayer(objetoPlayer.objectId, TypeAction.AddPoint);
                                 }
 
@@ -244,7 +247,7 @@ public class ControllerAddPointOrDead : MonoBehaviour
 
     IEnumerator RecoverCanDiscountLife()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         canDiscountLife = true;
     }
 }
@@ -261,7 +264,9 @@ public class CharacterObject
     public int posY;
     public int objectId;
 
-    public CharacterObject() { }
+    public CharacterObject() {
+        objectId = -1;
+    }
     public CharacterObject(GameObject _characterObject,string _name,int _posX,int _posY,int _objectId, Type _type = Type.None) {
         characterObject = _characterObject;
         type = _type;

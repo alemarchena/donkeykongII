@@ -75,14 +75,14 @@ public class ControllerUI : MonoBehaviour
         stoped = false;
         textWinLose.text = "";
         
-        ActivationSpriteDonKeyKongFree(false);
-        ActivationSpriteDonKeyKongWinner(false);
+
         CreateUIlife();
         StartCoroutine(WaitWinner());
         StartCoroutine(WaitLoser());
         StartCoroutine(WaitPlaying());
         StartCoroutine(DelayActivaLocks());
         StartCoroutine(DelayDisplayCharacters());
+        StartCoroutine(DelayDeactivateDisplayFreeDonKeyKong());
     }
 
     IEnumerator DelayActivaLocks()
@@ -98,6 +98,14 @@ public class ControllerUI : MonoBehaviour
         ActivationSpriteKey(true);
         ActivationSpriteDonKeyKong(true);
     }
+
+    IEnumerator DelayDeactivateDisplayFreeDonKeyKong()
+    {
+        yield return new WaitForSeconds(3.5f);
+        ActivationSpriteDonKeyKongFree(false);
+        ActivationSpriteDonKeyKongWinner(false);
+    }
+   
     void Update()
     {
         if (!controllerGame.Playing && stoped && !controllerGame.ReStart)
@@ -108,19 +116,16 @@ public class ControllerUI : MonoBehaviour
         if (controllerGame.Playing && stoped)
             stoped = false;
 
+        textPoints.text = playerData.Points.ToString();
 
-        if (controllerKeyPoint.IsAddingPoint)
-        {
-            textPoints.text = playerData.Points.ToString();
-            if (playerData.Life > 0) textWinLose.text = "";
-        }
     }
 
     IEnumerator WaitPlaying()
     {
-        yield return new WaitUntil(HasPlaying);
 
-        if(!spritePlayer.enabled)ActivationSpritePlayer(true);
+        yield return new WaitUntil(HasPlaying);
+        if (playerData.Life > 0) textWinLose.text = "";
+        if (!spritePlayer.enabled)ActivationSpritePlayer(true);
         if (buttonPlay.activeSelf) buttonPlay.SetActive(false);
         
 
@@ -217,13 +222,13 @@ public class ControllerUI : MonoBehaviour
         if(state)
         {
             ActivationSpriteDonKeyKongFree(true);
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(1.5f);
             ActivationSpriteDonKeyKongFree(false);
             ActivationSpriteDonKeyKongWinner(true);
         }
         else
         {
-            yield return new WaitForSeconds(4f);
+            yield return new WaitForSeconds(3f);
             ActivationSpriteDonKeyKongFree(false);
             ActivationSpriteDonKeyKongWinner(false);
         }

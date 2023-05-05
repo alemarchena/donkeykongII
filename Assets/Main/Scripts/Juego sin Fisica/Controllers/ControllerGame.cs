@@ -7,6 +7,7 @@ using UnityEngine;
 public class ControllerGame : MonoBehaviour
 {
     [SerializeField] Configuration configuration;
+    [SerializeField] EnemyList enemyList;
     [SerializeField] PlayerData playerData;
     ControllerSound controllerSound;
     ControllerUI controllerUI;
@@ -26,11 +27,13 @@ public class ControllerGame : MonoBehaviour
             playerOperator = FindObjectOfType<PlayerOperator>();
             controllerUI = FindObjectOfType<ControllerUI>();
             controllerSound = FindObjectOfType<ControllerSound>();
+            enemyList = FindObjectOfType<EnemyList>();
 
             if (!playerData) Debug.LogError("Falta el componente PlayerData");
             if (!configuration) Debug.LogError("Falta asignar el archivo Configuration");
             if (!controllerSound) Debug.LogError("Falta el ControllerSound en el juego");
             if (!controllerUI) Debug.LogError("Falta el ControllerUI en el juego");
+            if (!enemyList) Debug.LogError("Falta el EnemyList en el juego");
 
             Playing = false;
             Loser = false;
@@ -56,6 +59,8 @@ public class ControllerGame : MonoBehaviour
         playerData.ReInit();
         ReInit();
         StartCoroutine(RetardPlaying());
+        controllerSound.PlayGame();
+
     }
 
     private void Update()
@@ -71,6 +76,7 @@ public class ControllerGame : MonoBehaviour
             if (playerData.Life<=0)
             {
                 controllerSound.PlayDeadPlayer();
+
                 Loser = true;
                 Playing = false;
             }
@@ -82,12 +88,16 @@ public class ControllerGame : MonoBehaviour
         yield return new WaitUntil(HasWinner);
         if (Winner)
         {
+            yield return new WaitForSeconds(2f);
+
             ReInit();
             playerData.ReStart();
             ReStart = true;
-            controllerUI.ReInit();
-            StartCoroutine(RetardPlaying());
             configuration.IncrementVelocity();
+            StartCoroutine(RetardPlaying());
+
+            controllerUI.ReInit();
+
             StartCoroutine(WaitWinner());
         }
     }
@@ -96,6 +106,9 @@ public class ControllerGame : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         Playing = true;
         controllerUI.ReInit();
+        yield return new WaitForSeconds(0.5f);
+        controllerSound.PlayGeneral();
+
 
     }
     private bool HasWinner()
@@ -103,6 +116,10 @@ public class ControllerGame : MonoBehaviour
         return Winner;
     }
 
+    public void Reset()
+    {
+        configuration.Reset();
+    }
 
     private void ReInit()
     {
@@ -110,5 +127,7 @@ public class ControllerGame : MonoBehaviour
         Loser = false;
         keyOperator.ReInit();
         playerOperator.ReInit();
+        enemyList.ReInit();
+
     }
 }

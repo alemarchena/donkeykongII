@@ -1,3 +1,5 @@
+using Codice.Client.BaseCommands;
+using Codice.Client.BaseCommands.WkStatus.Printers;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -7,6 +9,9 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
     ControllerGame controllerGame;
 
     [SerializeField] Configuration configuration;
+    [Range(0f,9f)]
+    [SerializeField] float velocityAddEnemy;
+    private float originalVelocity;
     public enum TypeMovementAutomatic { HorizontalBounce, HorizontalFromLeft, HorizontalFromRight, DownHorizontalBounce }
     public enum InitialPosition { Left, Right }
     public enum ViewPosition { Left, Right }
@@ -21,6 +26,7 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
 
     [Header("Displacement Quantity")]
     [SerializeField] float _stepX=0.75f;
+    [SerializeField] float _stepXlimit=0.32f;
     [SerializeField] float _stepY=0.6f;
 
 
@@ -100,6 +106,7 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
 
     }
     
+  
     private void ResetTime()
     {
         counterTime = 0;
@@ -134,7 +141,6 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
                 transform.position = positionStart;
                 break;
         }
-        Visibilidad();
     }
     
 
@@ -149,7 +155,7 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
             if(counterDelayTime > startTimeDelayInSeconds && !okStart)
                 okStart = true;
 
-            counterTime += configuration.VelocityEnemies * Time.deltaTime;
+            counterTime += (configuration.VelocityEnemies + velocityAddEnemy) * Time.deltaTime;
             if(counterTime > 1)
                 ResetTime();
 
@@ -187,49 +193,85 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
 
     private void Visibilidad()
     {
-        if (counterX == _limitCounterRightX || counterX == _limitCounterLeftX)
-            sprite.enabled = false;
-        else
-            sprite.enabled = true;
+        StartCoroutine(Blink());
+
+    }
+
+    IEnumerator Blink()
+    {
+        Color originalColor = sprite.color;
+        Vector3 scaleOriginal = transform.localScale;
+        Vector3 newScaleOriginal = new Vector3(transform.localScale.x + 0.2f, transform.localScale.y + 0.2f
+            , transform.localScale.z + 0.2f);
+
+        sprite.color = Color.red;
+        transform.localScale = newScaleOriginal;
+        yield return new WaitForSeconds(0.03f);
+        sprite.enabled = false;
+        yield return new WaitForSeconds(0.03f);
+        sprite.color = Color.red;
+        transform.localScale = scaleOriginal;
+        sprite.enabled = true;
+        yield return new WaitForSeconds(0.03f);
+        sprite.enabled = false;
+        yield return new WaitForSeconds(0.03f);
+        transform.localScale = newScaleOriginal;
+        sprite.enabled = true;
+        sprite.color = Color.red;
+        yield return new WaitForSeconds(0.03f);
+        sprite.enabled = true;
+        sprite.color = originalColor;
+        transform.localScale = scaleOriginal;
+
+
+
     }
     private void HorizontalBounceCounter()
     {
-        Visibilidad();
 
         if (counterX >= _limitCounterRightX)
         {
             FinRightPosition();
+
             counterX = _limitCounterRightX;
         }
         else if (counterX <= _limitCounterLeftX)
         {
             FinLeftPosition();
+
             counterX = _limitCounterLeftX;
         }
 
 
         if (moveToRight)
         {
-            t.position = new Vector3(t.position.x - _stepX, t.position.y, t.position.z);
+            if (counterX == _limitCounterRightX || counterX == _limitCounterLeftX)
+                t.position = new Vector3(t.position.x - _stepXlimit, t.position.y, t.position.z);
+            else
+                t.position = new Vector3(t.position.x - _stepX, t.position.y, t.position.z);
+
             counterX -= 1;
         }
         else
         {
-            t.position = new Vector3(t.position.x + _stepX, t.position.y, t.position.z);
+            if (counterX == _limitCounterRightX || counterX == _limitCounterLeftX)
+                t.position = new Vector3(t.position.x + _stepXlimit, t.position.y, t.position.z);
+            else
+                t.position = new Vector3(t.position.x + _stepX, t.position.y, t.position.z);
+
             counterX += 1;
         }
-        Visibilidad();
 
     }
 
     private void DownHorizontalBounceCounter()
     {
-        Visibilidad();
 
         if (counterX >= _limitCounterRightX)
         {
             FinRightPosition();
             counterX = _limitCounterRightX;
+
             t.position = new Vector3(t.position.x, t.position.y - _stepY, t.position.z);
             counterY -= 1;
         }
@@ -237,21 +279,27 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
         {
             FinLeftPosition();
             counterX = _limitCounterLeftX;
+
             t.position = new Vector3(t.position.x , t.position.y - _stepY, t.position.z);
             counterY -= 1;
-
         }
 
 
         if (moveToRight)
         {
+            if (counterX == _limitCounterRightX || counterX == _limitCounterLeftX)
+                t.position = new Vector3(t.position.x - _stepXlimit, t.position.y, t.position.z);
+            else
+                t.position = new Vector3(t.position.x - _stepX, t.position.y, t.position.z);
 
-            t.position = new Vector3(t.position.x - _stepX, t.position.y, t.position.z);
             counterX -= 1;
         }
         else
         {
-            t.position = new Vector3(t.position.x + _stepX, t.position.y, t.position.z);
+            if (counterX == _limitCounterRightX || counterX == _limitCounterLeftX)
+                t.position = new Vector3(t.position.x + _stepXlimit, t.position.y, t.position.z);
+            else
+                t.position = new Vector3(t.position.x + _stepX, t.position.y, t.position.z);
             counterX += 1;
         }
 
@@ -269,18 +317,22 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
                 canMove = false;
         }
 
-        Visibilidad();
     }
     private void FinRightPosition()
     {
         moveToRight = true;
         sprite.flipX = !sprite.flipX;
+        Visibilidad();
+
+
     }
 
     private void FinLeftPosition()
     {
         moveToRight = false;
         sprite.flipX = !sprite.flipX;
+        Visibilidad();
+
     }
 
     private void HorizontalFromLeft()
@@ -296,9 +348,7 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
             t.position = new Vector3(t.position.x + _stepX, t.position.y, t.position.z);
             counterX += 1;
         }
-        Visibilidad();
         TeletransportX();
-
     }
 
     private void HorizontalFromRight()
@@ -308,14 +358,12 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
             FinRightPosition();
             counterX = _limitCounterRightX;
         }
-
         if (counterX > _limitCounterLeftX)
         {
             t.position = new Vector3(t.position.x - _stepX, t.position.y, t.position.z);
             counterX -= 1;
         }
 
-        Visibilidad();
         TeletransportX();
     }
 

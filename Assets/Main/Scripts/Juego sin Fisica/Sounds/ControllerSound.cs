@@ -21,6 +21,8 @@ public class ControllerSound : MonoBehaviour
     [SerializeField] AudioClip ClipJumpPlayer;
     [SerializeField] AudioClip ClipLostLifePlayer;
     [SerializeField] AudioClip ClipDeadPlayer;
+    [SerializeField] AudioClip ClipPlayButton;
+    [SerializeField] AudioClip ClipGeneralMusic;
 
     [SerializeField] float speedTimeSoundEnemy;
     private float counterTimerSoundEnemy = 0;
@@ -101,5 +103,14 @@ public class ControllerSound : MonoBehaviour
         ASKey.Play();
     }
 
-    public void PlayGeneral() { }
+    public void PlayGame()
+    {
+        ASGeneral.clip = ClipPlayButton;
+        ASGeneral.Play();
+    }
+
+    public void PlayGeneral() {
+        ASGeneral.clip = ClipGeneralMusic;
+        ASGeneral.Play();
+    }
 }
