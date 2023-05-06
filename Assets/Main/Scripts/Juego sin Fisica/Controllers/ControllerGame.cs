@@ -56,7 +56,7 @@ public class ControllerGame : MonoBehaviour
     {
         ReStart = false;
         configuration.ReInit();
-        playerData.ReInit();
+        
         ReInit();
         StartCoroutine(RetardPlaying());
         controllerSound.PlayGame();
@@ -121,13 +121,13 @@ public class ControllerGame : MonoBehaviour
         configuration.Reset();
     }
 
-    private void ReInit()
+    public void ReInit()
     {
         Winner = false;
         Loser = false;
         keyOperator.ReInit();
         playerOperator.ReInit();
         enemyList.ReInit();
-
+        playerData.ReInit();
     }
 }

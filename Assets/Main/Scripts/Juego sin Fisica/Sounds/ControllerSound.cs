@@ -12,6 +12,8 @@ public class ControllerSound : MonoBehaviour
     [SerializeField] AudioSource ASPlayer;
     [SerializeField] AudioSource ASKey;
     [SerializeField] AudioSource ASGeneral;
+    [SerializeField] AudioSource ASEfect;
+    
     [Space]
     [SerializeField] AudioClip ClipGetKey;
     [SerializeField] AudioClip ClipCapturedKey;
@@ -23,6 +25,7 @@ public class ControllerSound : MonoBehaviour
     [SerializeField] AudioClip ClipDeadPlayer;
     [SerializeField] AudioClip ClipPlayButton;
     [SerializeField] AudioClip ClipGeneralMusic;
+    [SerializeField] AudioClip ClipGeneralReset;
 
     [SerializeField] float speedTimeSoundEnemy;
     private float counterTimerSoundEnemy = 0;
@@ -113,4 +116,10 @@ public class ControllerSound : MonoBehaviour
         ASGeneral.clip = ClipGeneralMusic;
         ASGeneral.Play();
     }
+    public void PlayGeneralReset()
+    {
+        ASEfect.clip = ClipGeneralReset;
+        ASEfect.Play();
+    }
+
 }

@@ -10,14 +10,6 @@ public class EnemyList : MonoBehaviour
    
     public void ReInit()
     {
-        
-        StartCoroutine(RetardReinit());
-
-    }
-
-    IEnumerator RetardReinit()
-    {
-        yield return new WaitForSeconds(2f);
         foreach (GameObject g in enemiesList)
         {
             g.SetActive(false);
@@ -50,7 +42,5 @@ public class EnemyList : MonoBehaviour
             }
             configuration.cicle = enemiesList.Count;
         }
-    
-
     }
 }

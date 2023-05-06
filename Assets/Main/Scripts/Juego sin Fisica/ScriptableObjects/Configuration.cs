@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -8,7 +7,7 @@ public class Configuration : ScriptableObject
 {
     [Range(1f, 10f)]
     [SerializeField] private float velocityEnemies;
-    [Range(0.1f, 1f)]
+    [Range(0f, 1f)]
     [SerializeField] private float incrementVelocityEnemies;
     public int cicle;
 

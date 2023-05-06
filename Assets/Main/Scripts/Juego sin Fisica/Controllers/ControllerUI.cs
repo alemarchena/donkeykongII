@@ -24,6 +24,7 @@ public class ControllerUI : MonoBehaviour
 
     [Space]
     [SerializeField] GameObject buttonPlay;
+    [SerializeField] GameObject buttonReset;
     [SerializeField] PlayerData playerData;
 
     private bool stoped;
@@ -127,6 +128,7 @@ public class ControllerUI : MonoBehaviour
         if (playerData.Life > 0) textWinLose.text = "";
         if (!spritePlayer.enabled)ActivationSpritePlayer(true);
         if (buttonPlay.activeSelf) buttonPlay.SetActive(false);
+        if (buttonReset.activeSelf) buttonReset.SetActive(false);
         
 
     }
@@ -140,6 +142,8 @@ public class ControllerUI : MonoBehaviour
     {
         yield return new WaitUntil(HasLoser);
         buttonPlay.SetActive(true);
+        buttonReset.SetActive(true);
+
         textWinLose.text = "You Lose";
         ActivationSpritePlayer(false);
         ActivationSpriteKey(false);

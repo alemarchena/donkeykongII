@@ -79,10 +79,10 @@ public class ControllerAddPointOrDead : MonoBehaviour
 
             if (id == listCharacters[a].objectId)
             {
-
                 listCharacters[a].posX = counterX;
                 listCharacters[a].posY = counterY;
                 StartCoroutine(RetardInform());
+                
                 return;
             }
         }
@@ -111,65 +111,71 @@ public class ControllerAddPointOrDead : MonoBehaviour
                 if (listCharacters[a].objectId != listCharacters[b].objectId && 
                     listCharacters[a].posX == listCharacters[b].posX)
                 {
-                    if (listCharacters[a].type == CharacterObject.Type.Player)
+
+                    if (listCharacters[a].characterObject.gameObject.activeSelf == true && listCharacters[b].characterObject.gameObject.activeSelf == true)
                     {
-                        objetoPlayer = listCharacters[a];
-                        objetoEnemy = listCharacters[b];
-                    }
-                    else
-                    {
-                        if (listCharacters[b].type == CharacterObject.Type.Player)
+
+                        if (listCharacters[a].type == CharacterObject.Type.Player)
                         {
-                            objetoPlayer = listCharacters[b];
-                            objetoEnemy = listCharacters[a];
+                            objetoPlayer = listCharacters[a];
+                            objetoEnemy = listCharacters[b];
                         }
                         else
                         {
-                            objetoPlayer = new CharacterObject();
-                            objetoEnemy = new CharacterObject();
-                        }
-                    }
-
-
-                    if (listCharacters[a].posY == listCharacters[b].posY)
-                    {
-                        if (listCharacters[a].type == CharacterObject.Type.Player || listCharacters[b].type == CharacterObject.Type.Player)
-                        {
-                            if(objetoPlayer.objectId != -1)
-                                ActionsInPlayer(objetoPlayer.objectId,TypeAction.DiscountLife);
-                            return;
-                        }
-                    } else
-                    {
-                        if(objetoPlayer.posY == objetoEnemy.posY + 1)
-                        {
-                            if (canReact)
+                            if (listCharacters[b].type == CharacterObject.Type.Player)
                             {
-                                canReact = false;
-                                canAddPoint = true;
-                                //Las posiciones de caer no valen para ganar puntos
-                                foreach (Vector2 vector in playerMovementMap.posNoCaer)
-                                {
-                                    if (vector.x == objetoPlayer.posX && vector.y + 1 == objetoPlayer.posY) 
-                                        //Es vector.y + 1 ya que la posicion de no caer es al momento de saltar 
-                                    {
-                                        canAddPoint = false;
-                                    }
-                                }
-                                if(canAddPoint)
-                                {
-                                    if(QueryIfGivePointEnemy(objetoEnemy.objectId) && objetoPlayer.objectId!=-1)
-                                        ActionsInPlayer(objetoPlayer.objectId, TypeAction.AddPoint);
-                                }
-
-                                canAddPoint = true;
-                                Invoke("ChangeCanReact", 0.5f);
+                                objetoPlayer = listCharacters[b];
+                                objetoEnemy = listCharacters[a];
                             }
-                            return;
+                            else
+                            {
+                                objetoPlayer = new CharacterObject();
+                                objetoEnemy = new CharacterObject();
+                            }
+                        }
+
+
+                        if (listCharacters[a].posY == listCharacters[b].posY)
+                        {
+                            if (listCharacters[a].type == CharacterObject.Type.Player || listCharacters[b].type == CharacterObject.Type.Player)
+                            {
+                                if(objetoPlayer.objectId != -1)
+                                    ActionsInPlayer(objetoPlayer.objectId,TypeAction.DiscountLife);
+                                return;
+                            }
+                        } else
+                        {
+                            if(objetoPlayer.posY == objetoEnemy.posY + 1)
+                            {
+                                if (canReact)
+                                {
+                                    canReact = false;
+                                    canAddPoint = true;
+                                    //Las posiciones de caer no valen para ganar puntos
+                                    foreach (Vector2 vector in playerMovementMap.posNoCaer)
+                                    {
+                                        if (vector.x == objetoPlayer.posX && vector.y + 1 == objetoPlayer.posY) 
+                                            //Es vector.y + 1 ya que la posicion de no caer es al momento de saltar 
+                                        {
+                                            canAddPoint = false;
+                                        }
+                                    }
+                                    if(canAddPoint)
+                                    {
+                                        if(QueryIfGivePointEnemy(objetoEnemy.objectId) && objetoPlayer.objectId!=-1)
+                                            ActionsInPlayer(objetoPlayer.objectId, TypeAction.AddPoint);
+                                    }
+
+                                    canAddPoint = true;
+                                    Invoke("ChangeCanReact", 0.5f);
+                                }
+                                return;
+                            }
                         }
                     }
+
                 }
-                
+
             }
         }
     }
