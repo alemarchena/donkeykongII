@@ -24,7 +24,7 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
 
     [Header("Displacement Quantity")]
     [SerializeField] float _stepX=0.75f;
-    [SerializeField] float _stepXlimit=0.32f;
+    [SerializeField] float _stepXlimit=0.375f;
     [SerializeField] float _stepY=0.6f;
 
 
@@ -82,6 +82,7 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
     private Vector3 positionStart;
     private float counterDelayTime=0;
     private bool okStart=false;
+
     private void Awake()
     {
         controllerGame = FindObjectOfType<ControllerGame>();
@@ -163,6 +164,8 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
                 {
                     try
                     {
+                       
+
                         switch (typeMovementRobot)
                         {
                             case TypeMovementAutomatic.HorizontalBounce:
@@ -189,6 +192,7 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
         }
     }
 
+  
     private void Visibilidad()
     {
         StartCoroutine(Blink());
@@ -198,67 +202,59 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
     IEnumerator Blink()
     {
         Color originalColor = sprite.color;
-        Vector3 scaleOriginal = transform.localScale;
-        Vector3 newScaleOriginal = new Vector3(transform.localScale.x + 0.2f, transform.localScale.y + 0.2f
-            , transform.localScale.z + 0.2f);
+       
 
-        sprite.color = Color.red;
-        transform.localScale = newScaleOriginal;
+        sprite.color = Color.green;
         yield return new WaitForSeconds(0.03f);
         sprite.enabled = false;
         yield return new WaitForSeconds(0.03f);
-        sprite.color = Color.red;
-        transform.localScale = scaleOriginal;
         sprite.enabled = true;
         yield return new WaitForSeconds(0.03f);
         sprite.enabled = false;
         yield return new WaitForSeconds(0.03f);
-        transform.localScale = newScaleOriginal;
         sprite.enabled = true;
-        sprite.color = Color.red;
+        sprite.color = Color.green;
         yield return new WaitForSeconds(0.03f);
         sprite.enabled = true;
         sprite.color = originalColor;
-        transform.localScale = scaleOriginal;
 
 
 
     }
     private void HorizontalBounceCounter()
     {
+        
+        
+            if (counterX >= _limitCounterRightX)
+            {
+                FinRightPosition();
 
-        if (counterX >= _limitCounterRightX)
-        {
-            FinRightPosition();
+                counterX = _limitCounterRightX;
+            }
+            else if (counterX <= _limitCounterLeftX)
+            {
+                FinLeftPosition();
 
-            counterX = _limitCounterRightX;
-        }
-        else if (counterX <= _limitCounterLeftX)
-        {
-            FinLeftPosition();
-
-            counterX = _limitCounterLeftX;
-        }
+                counterX = _limitCounterLeftX;
+            }
 
 
-        if (moveToRight)
-        {
-            if (counterX == _limitCounterRightX || counterX == _limitCounterLeftX)
-                t.position = new Vector3(t.position.x - _stepXlimit, t.position.y, t.position.z);
-            else
+            if (moveToRight)
+            {
+               
                 t.position = new Vector3(t.position.x - _stepX, t.position.y, t.position.z);
 
-            counterX -= 1;
-        }
-        else
-        {
-            if (counterX == _limitCounterRightX || counterX == _limitCounterLeftX)
-                t.position = new Vector3(t.position.x + _stepXlimit, t.position.y, t.position.z);
+                counterX -= 1;
+            }
             else
-                t.position = new Vector3(t.position.x + _stepX, t.position.y, t.position.z);
+            {
+               
+                    t.position = new Vector3(t.position.x + _stepX, t.position.y, t.position.z);
 
-            counterX += 1;
-        }
+                counterX += 1;
+            }
+        
+
 
     }
 
@@ -286,7 +282,7 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
         if (moveToRight)
         {
             if (counterX == _limitCounterRightX || counterX == _limitCounterLeftX)
-                t.position = new Vector3(t.position.x - _stepXlimit, t.position.y, t.position.z);
+                t.position = new Vector3(t.position.x - _stepX, t.position.y, t.position.z);
             else
                 t.position = new Vector3(t.position.x - _stepX, t.position.y, t.position.z);
 
@@ -295,7 +291,7 @@ public class EnemyMovementAutomaticWithCounter : MonoBehaviour
         else
         {
             if (counterX == _limitCounterRightX || counterX == _limitCounterLeftX)
-                t.position = new Vector3(t.position.x + _stepXlimit, t.position.y, t.position.z);
+                t.position = new Vector3(t.position.x + _stepX, t.position.y, t.position.z);
             else
                 t.position = new Vector3(t.position.x + _stepX, t.position.y, t.position.z);
             counterX += 1;
